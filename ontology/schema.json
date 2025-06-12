@@ -1,32 +1,157 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Cognitive Ontology Schema",
+  "description": "Schema for representing cognitive statements, biases, and their relationships",
   "type": "object",
   "properties": {
     "nodes": {
       "type": "array",
+      "description": "Collection of all nodes in the cognitive graph",
       "items": {
         "type": "object",
         "properties": {
-          "id": { "type": "string" },
-          "type": { "type": "string", "enum": ["statement", "argument", "cognitive_bias", "quotation"] },
-          "text": { "type": "string" },
-          "credibility": { "type": "string", "enum": ["green", "yellow", "red", "gray"] },
-          "author": { "type": "string" }
+          "id": { 
+            "type": "string",
+            "description": "Unique identifier for the node",
+            "pattern": "^[a-zA-Z0-9_-]+$"
+          },
+          "type": { 
+            "type": "string", 
+            "enum": ["statement", "argument", "cognitive_bias", "quotation"],
+            "description": "Type of the node"
+          },
+          "text": { 
+            "type": "string",
+            "description": "Content of the node",
+            "minLength": 1
+          },
+          "credibility": { 
+            "type": "string", 
+            "enum": ["green", "yellow", "red", "gray"],
+            "description": "Credibility level of the statement",
+            "default": "gray"
+          },
+          "author": { 
+            "type": "string",
+            "description": "Author of the statement or quotation"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the statement was made or recorded"
+          },
+          "source": {
+            "type": "string",
+            "description": "Source of the statement or quotation"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional metadata about the node",
+            "properties": {
+              "tags": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Tags for categorizing the node"
+              },
+              "confidence": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1,
+                "description": "Confidence level in the statement's accuracy"
+              },
+              "notes": {
+                "type": "string",
+                "description": "Additional notes or context"
+              }
+            }
+          }
         },
-        "required": ["id", "type", "text"]
+        "required": ["id", "type", "text"],
+        "additionalProperties": false
       }
     },
     "edges": {
       "type": "array",
+      "description": "Collection of relationships between nodes",
       "items": {
         "type": "object",
         "properties": {
-          "source": { "type": "string" },
-          "target": { "type": "string" },
-          "relation": { "type": "string" }
+          "source": { 
+            "type": "string",
+            "description": "ID of the source node"
+          },
+          "target": { 
+            "type": "string",
+            "description": "ID of the target node"
+          },
+          "relation": { 
+            "type": "string",
+            "enum": [
+              "supports",
+              "contradicts",
+              "influences",
+              "responds_to",
+              "quotes",
+              "cites",
+              "related_to"
+            ],
+            "description": "Type of relationship between nodes"
+          },
+          "strength": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Strength of the relationship"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional metadata about the relationship",
+            "properties": {
+              "context": {
+                "type": "string",
+                "description": "Context of the relationship"
+              },
+              "timestamp": {
+                "type": "string",
+                "format": "date-time",
+                "description": "When the relationship was established"
+              }
+            }
+          }
         },
-        "required": ["source", "target", "relation"]
+        "required": ["source", "target", "relation"],
+        "additionalProperties": false
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Global metadata about the cognitive graph",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Title of the cognitive graph"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the cognitive graph"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the graph was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the graph was last updated"
+        },
+        "version": {
+          "type": "string",
+          "description": "Version of the schema used"
+        }
       }
     }
   },
-  "required": ["nodes", "edges"]
+  "required": ["nodes", "edges"],
+  "additionalProperties": false
 } 
