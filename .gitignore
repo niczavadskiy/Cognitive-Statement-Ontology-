@@ -32,7 +32,6 @@ ENV/
 *.swo
 
 # Project specific
-visualisations/
 *.png
 *.dot
 arh.zip
@@ -71,6 +70,5 @@ ENV/
 *.swo
 
 # Project specific
-visualisations/
 *.png
 *.dot 
