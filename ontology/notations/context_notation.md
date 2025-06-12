@@ -58,58 +58,44 @@ The context-oriented notation is designed to analyze the sources and influences 
 }
 ```
 
-## Visualization
+## Visual Elements
 
-The context-oriented notation is particularly useful for:
-- Showing the "family tree" of statements
-- Highlighting the influence of external sources
-- Identifying patterns of self-referential reasoning
-- Mapping the spread of cognitive biases
+### Nodes
+- **Cognitive Biases**: 
+  - Displayed as colored columns
+  - Each bias is assigned a unique pastel color from a set of 12 colors
+  - Colors repeat in a cycle if there are more than 12 biases
+- **No Cognitive Biases**:
+  - Displayed as a gray column on the left
+  - Contains statements without bias connections
+- **Statements**:
+  - Displayed in corresponding columns based on bias connections
+  - Placed in white rectangles within columns
+  - If a statement is connected to multiple biases:
+    - Text is displayed in the rightmost rectangle
+    - Empty rectangles are created in other columns
+    - Rectangles are connected with dotted lines
+- **Quotes**: 
+  - Displayed in the right "CONTEXT" block
+  - Evenly distributed vertically
 
-## Описание
-Контекстная нотация фокусируется на представлении утверждений в контексте их источников и искажений, где:
-- Когнитивные искажения (biases) образуют цветные колонки
-- Утверждения (statements) размещаются в соответствующих колонках 
-- Цитаты (quotations) и контекст выделены в отдельный блок справа
+### Connections
+- Dotted lines between rectangles of the same statement
+- Placement of a statement in a bias column indicates a connection
+- Lines from statements to quotes
+- Quotes are connected to the rightmost rectangle of the statement
 
-## Визуальные элементы
+## Features
+- Visual separation of main content and context
+- Color differentiation of biases
+- Clear representation of connections between statements and biases
+- Compact context representation
+- The diagram can be sorted by quote chronology or statement chronology depending on the researcher's needs
 
-### Узлы
-- **Когнитивные искажения**: 
-  - Отображаются в виде цветных колонок
-  - Каждому искажению присваивается уникальный пастельный цвет из набора из 12 цветов
-  - При количестве искажений более 12 цвета повторяются по кругу
-- **Нет когнитивных искажений**:
-  - Отображается как серая колонка слева
-  - Содержит утверждения без связей с когнитивными искажениями
-- **Утверждения**:
-  - Отображаются в соответствующих колонках в зависимости от наличия связей с когнитивными искажениями
-  - Размещаются в белых прямоугольниках внутри колонок
-  - Если утверждение связано с несколькими искажениями:
-    - Текст отображается в правом прямоугольнике
-    - Пустые прямоугольники создаются в других колонках
-    - Прямоугольники соединяются пунктирными линиями
-- **Цитаты**: 
-  - Отображаются в правом блоке "CONTEXT"
-  - Равномерно распределены по вертикали
-
-### Связи
-- Пунктирные линии между прямоугольниками одного утверждения
-- Нахождения объекта утверждения в колонки когнитивного искажения свидетельствует о связи
-- Линии от утверждений к цитатам
-- Цитаты связываются с правым прямоугольником утверждения
-
-## Особенности
-- Визуальное разделение на основную часть и контекст
-- Цветовая дифференциация искажений
-- Четкое представление связей между утверждениями и искажениями
-- Компактное представление контекста
-- Диаграмму в данной нотации можно сортировать по хронологии цитат либо хронологии утверждений - в зависимости от задач исследователя.
-
-## Использование
+## Usage
 ```sh
 python tools/render_graph.py <input_file> context
 ```
 
-## Пример
-![Пример контекстной нотации](cognitive_ontology_graph_context.png) 
+## Example
+![Example of context-oriented notation](../examples/visualisations/example_context.png) 
