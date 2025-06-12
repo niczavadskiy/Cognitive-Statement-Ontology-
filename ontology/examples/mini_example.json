@@ -1,0 +1,75 @@
+{
+  "nodes": [
+    {
+      "id": "s1",
+      "type": "statement",
+      "text": "Most people tend to confirm their beliefs.",
+      "credibility": "green"
+    },
+    {
+      "id": "s2",
+      "type": "statement",
+      "text": "People overestimate the probability of rare events.",
+      "credibility": "yellow"
+    },
+    {
+      "id": "s3",
+      "type": "statement",
+      "text": "Biases affect the perception of facts.",
+      "credibility": "green"
+    },
+    {
+      "id": "b1",
+      "type": "cognitive_bias",
+      "bias_type": "confirmation_bias",
+      "text": "Confirmation Bias"
+    },
+    {
+      "id": "b2",
+      "type": "cognitive_bias",
+      "bias_type": "availability_heuristic",
+      "text": "Availability Heuristic"
+    },
+    {
+      "id": "q1",
+      "type": "quotation",
+      "text": "Tversky & Kahneman, 1974 Part555",
+      "author": "Tversky & Kahneman"
+    },
+    {
+      "id": "q2",
+      "type": "quotation",
+      "text": "Tversky & Kahneman, 1974 Part777",
+      "author": "Tversky & Kahneman"
+    },
+    {
+      "id": "a1",
+      "type": "argument",
+      "text": "Argument 1"
+    }
+  ],
+  "edges": [
+    { "from": "b1", "to": "s1", "relation": "influences", "bidirection": "no" },
+    { "from": "b1", "to": "s3", "relation": "influences", "bidirection": "no" },
+    { "from": "b2", "to": "s2", "relation": "influences", "bidirection": "no" },
+    { "from": "b2", "to": "s3", "relation": "influences", "bidirection": "no" },
+    { "from": "q1", "to": "s1", "relation": "cites", "bidirection": "no" },
+    { "from": "q2", "to": "s2", "relation": "cites", "bidirection": "no" },
+    { "from": "q2", "to": "s3", "relation": "cites", "bidirection": "no" },
+    {
+      "source": "q1",
+      "target": "s1",
+      "relation": "supports"
+    },
+    {
+      "source": "q2",
+      "target": "s1",
+      "relation": "supports"
+    },
+    {
+      "source": "s1",
+      "target": "a1",
+      "relation": "supports"
+    }
+  ]
+}

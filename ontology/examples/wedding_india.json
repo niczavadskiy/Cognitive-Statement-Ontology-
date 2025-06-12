@@ -1,0 +1,86 @@
+{
+  "nodes": [
+    {
+      "id": "s1",
+      "type": "statement",
+      "text": "Indian weddings are vibrant multi-day celebrations.",
+      "credibility": "green"
+    },
+    {
+      "id": "s2",
+      "type": "statement",
+      "text": "Wedding ceremonies in India reflect cultural and religious diversity.",
+      "credibility": "green"
+    },
+    {
+      "id": "s3",
+      "type": "statement",
+      "text": "Weddings in India are often accompanied by rich traditions and rituals.",
+      "credibility": "green"
+    },
+    {
+      "id": "s4",
+      "type": "statement",
+      "text": "Modern Indian weddings may include elements of Western culture.",
+      "credibility": "yellow"
+    },
+    {
+      "id": "b1",
+      "type": "cognitive_bias",
+      "bias_type": "cultural_bias",
+      "text": "Cultural Bias"
+    },
+    {
+      "id": "b2",
+      "type": "cognitive_bias",
+      "bias_type": "tradition_bias",
+      "text": "Tradition Bias"
+    },
+    {
+      "id": "a1",
+      "type": "argument",
+      "text": "Indian weddings preserve cultural identity"
+    },
+    {
+      "id": "a2",
+      "type": "argument",
+      "text": "Modern weddings in India adapt to globalization"
+    },
+    {
+      "id": "q1",
+      "type": "quotation",
+      "text": "The Wedding Season, Shikha Sharma, 2019",
+      "author": "Shikha Sharma"
+    },
+    {
+      "id": "q2",
+      "type": "quotation",
+      "text": "Indian Weddings: A Celebration of Love and Tradition, Priya Patel, 2018",
+      "author": "Priya Patel"
+    },
+    {
+      "id": "q3",
+      "type": "quotation",
+      "text": "Wedding Customs Around the World, John Smith, 2017",
+      "author": "John Smith"
+    },
+    {
+      "id": "q4",
+      "type": "quotation",
+      "text": "The Art of Indian Weddings, Meera Kapoor, 2020",
+      "author": "Meera Kapoor"
+    }
+  ],
+  "edges": [
+    { "from": "b1", "to": "s1", "relation": "influences", "bidirection": "no" },
+    { "from": "b2", "to": "s3", "relation": "influences", "bidirection": "no" },
+    { "from": "q1", "to": "s1", "relation": "cites", "bidirection": "no" },
+    { "from": "q2", "to": "s2", "relation": "cites", "bidirection": "no" },
+    { "from": "q3", "to": "s4", "relation": "cites", "bidirection": "no" },
+    { "from": "q4", "to": "s3", "relation": "cites", "bidirection": "no" },
+    { "from": "s1", "to": "a1", "relation": "supports", "bidirection": "no" },
+    { "from": "s2", "to": "a1", "relation": "supports", "bidirection": "no" },
+    { "from": "s3", "to": "a1", "relation": "supports", "bidirection": "no" },
+    { "from": "s4", "to": "a2", "relation": "supports", "bidirection": "no" }
+  ]
+} 

@@ -1,0 +1,86 @@
+{
+  "nodes": [
+    {
+      "id": "s1",
+      "type": "statement",
+      "text": "Curiosity is an innate drive to learn new things.",
+      "credibility": "green"
+    },
+    {
+      "id": "s2",
+      "type": "statement",
+      "text": "Curiosity promotes creativity and innovation.",
+      "credibility": "green"
+    },
+    {
+      "id": "s3",
+      "type": "statement",
+      "text": "Curiosity can lead to risk and unjustified actions.",
+      "credibility": "yellow"
+    },
+    {
+      "id": "s4",
+      "type": "statement",
+      "text": "Curiosity is a key factor in learning and development.",
+      "credibility": "green"
+    },
+    {
+      "id": "b1",
+      "type": "cognitive_bias",
+      "bias_type": "curiosity_bias",
+      "text": "Curiosity Bias"
+    },
+    {
+      "id": "b2",
+      "type": "cognitive_bias",
+      "bias_type": "risk_seeking",
+      "text": "Risk-Seeking Bias"
+    },
+    {
+      "id": "a1",
+      "type": "argument",
+      "text": "Curiosity needs to be developed from childhood"
+    },
+    {
+      "id": "a2",
+      "type": "argument",
+      "text": "Curiosity requires balance with caution"
+    },
+    {
+      "id": "q1",
+      "type": "quotation",
+      "text": "Curiosity: The Story of a Mars Rover, Markus Motum, 2018",
+      "author": "Markus Motum"
+    },
+    {
+      "id": "q2",
+      "type": "quotation",
+      "text": "The Power of Curiosity, Ian Leslie, 2014",
+      "author": "Ian Leslie"
+    },
+    {
+      "id": "q3",
+      "type": "quotation",
+      "text": "Curious: The Desire to Know and Why Your Future Depends On It, Ian Leslie, 2014",
+      "author": "Ian Leslie"
+    },
+    {
+      "id": "q4",
+      "type": "quotation",
+      "text": "The Art of Thinking Clearly, Rolf Dobelli, 2013",
+      "author": "Rolf Dobelli"
+    }
+  ],
+  "edges": [
+    { "from": "b1", "to": "s1", "relation": "influences", "bidirection": "no" },
+    { "from": "b2", "to": "s3", "relation": "influences", "bidirection": "no" },
+    { "from": "q1", "to": "s1", "relation": "cites", "bidirection": "no" },
+    { "from": "q2", "to": "s2", "relation": "cites", "bidirection": "no" },
+    { "from": "q3", "to": "s4", "relation": "cites", "bidirection": "no" },
+    { "from": "q4", "to": "s3", "relation": "cites", "bidirection": "no" },
+    { "from": "s1", "to": "a1", "relation": "supports", "bidirection": "no" },
+    { "from": "s2", "to": "a1", "relation": "supports", "bidirection": "no" },
+    { "from": "s3", "to": "a2", "relation": "supports", "bidirection": "no" },
+    { "from": "s4", "to": "a1", "relation": "supports", "bidirection": "no" }
+  ]
+} 

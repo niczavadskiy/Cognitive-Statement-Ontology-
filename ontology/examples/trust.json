@@ -1,0 +1,86 @@
+{
+  "nodes": [
+    {
+      "id": "s1",
+      "type": "statement",
+      "text": "Trust is the foundation of social interactions.",
+      "credibility": "green"
+    },
+    {
+      "id": "s2",
+      "type": "statement",
+      "text": "Trust can be blind and lead to mistakes.",
+      "credibility": "yellow"
+    },
+    {
+      "id": "s3",
+      "type": "statement",
+      "text": "Trust requires a balance between openness and caution.",
+      "credibility": "green"
+    },
+    {
+      "id": "s4",
+      "type": "statement",
+      "text": "Trust is built through consistent interactions.",
+      "credibility": "green"
+    },
+    {
+      "id": "b1",
+      "type": "cognitive_bias",
+      "bias_type": "trust_bias",
+      "text": "Trust Bias"
+    },
+    {
+      "id": "b2",
+      "type": "cognitive_bias",
+      "bias_type": "naive_realism",
+      "text": "Naive Realism"
+    },
+    {
+      "id": "a1",
+      "type": "argument",
+      "text": "Trust needs to be developed consciously"
+    },
+    {
+      "id": "a2",
+      "type": "argument",
+      "text": "Trust should be justified"
+    },
+    {
+      "id": "q1",
+      "type": "quotation",
+      "text": "Trust: The Social Virtues and the Creation of Prosperity, Francis Fukuyama, 1995",
+      "author": "Francis Fukuyama"
+    },
+    {
+      "id": "q2",
+      "type": "quotation",
+      "text": "The Speed of Trust, Stephen M.R. Covey, 2006",
+      "author": "Stephen M.R. Covey"
+    },
+    {
+      "id": "q3",
+      "type": "quotation",
+      "text": "Trust and Betrayal in the Workplace, Dennis Reina, 2015",
+      "author": "Dennis Reina"
+    },
+    {
+      "id": "q4",
+      "type": "quotation",
+      "text": "The Psychology of Trust, Ken Rotenberg, 2019",
+      "author": "Ken Rotenberg"
+    }
+  ],
+  "edges": [
+    { "from": "b1", "to": "s2", "relation": "influences", "bidirection": "no" },
+    { "from": "b2", "to": "s3", "relation": "influences", "bidirection": "no" },
+    { "from": "q1", "to": "s1", "relation": "cites", "bidirection": "no" },
+    { "from": "q2", "to": "s2", "relation": "cites", "bidirection": "no" },
+    { "from": "q3", "to": "s3", "relation": "cites", "bidirection": "no" },
+    { "from": "q4", "to": "s4", "relation": "cites", "bidirection": "no" },
+    { "from": "s1", "to": "a1", "relation": "supports", "bidirection": "no" },
+    { "from": "s2", "to": "a2", "relation": "supports", "bidirection": "no" },
+    { "from": "s3", "to": "a1", "relation": "supports", "bidirection": "no" },
+    { "from": "s4", "to": "a2", "relation": "supports", "bidirection": "no" }
+  ]
+} 

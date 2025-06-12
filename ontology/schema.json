@@ -1,0 +1,32 @@
+{
+  "type": "object",
+  "properties": {
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "type": { "type": "string", "enum": ["statement", "argument", "cognitive_bias", "quotation"] },
+          "text": { "type": "string" },
+          "credibility": { "type": "string", "enum": ["green", "yellow", "red", "gray"] },
+          "author": { "type": "string" }
+        },
+        "required": ["id", "type", "text"]
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "source": { "type": "string" },
+          "target": { "type": "string" },
+          "relation": { "type": "string" }
+        },
+        "required": ["source", "target", "relation"]
+      }
+    }
+  },
+  "required": ["nodes", "edges"]
+} 

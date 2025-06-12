@@ -1,0 +1,89 @@
+{
+  "nodes": [
+    {
+      "id": "s1",
+      "type": "statement",
+      "text": "Earth is the center of the Universe, around which all celestial bodies revolve.",
+      "credibility": "red"
+    },
+    {
+      "id": "s2",
+      "type": "statement",
+      "text": "The sphere of fixed stars is the outer boundary of the cosmos.",
+      "credibility": "red"
+    },
+    {
+      "id": "s3",
+      "type": "statement",
+      "text": "The Sun, Moon, and planets move in perfect circular orbits.",
+      "credibility": "red"
+    },
+    {
+      "id": "s4",
+      "type": "statement",
+      "text": "The heliocentric model contradicts Sacred Scripture.",
+      "credibility": "yellow"
+    },
+    {
+      "id": "b1",
+      "type": "cognitive_bias",
+      "bias_type": "authority_bias",
+      "text": "Authority Bias"
+    },
+    {
+      "id": "b2",
+      "type": "cognitive_bias",
+      "bias_type": "confirmation_bias",
+      "text": "Confirmation Bias"
+    },
+    {
+      "id": "b3",
+      "type": "cognitive_bias",
+      "bias_type": "status_quo_bias",
+      "text": "Status Quo Bias"
+    },
+    {
+      "id": "a1",
+      "type": "argument",
+      "text": "If Earth revolved around the Sun, we would feel this movement."
+    },
+    {
+      "id": "q1",
+      "type": "quotation",
+      "text": "De revolutionibus orbium coelestium, Nicolaus Copernicus, 1543",
+      "author": "Nicolaus Copernicus"
+    },
+    {
+      "id": "q2",
+      "type": "quotation",
+      "text": "Summa Theologica, Thomas Aquinas, 1274",
+      "author": "Thomas Aquinas"
+    },
+    {
+      "id": "q3",
+      "type": "quotation",
+      "text": "Almagest, Claudius Ptolemy, 150 CE",
+      "author": "Claudius Ptolemy"
+    },
+    {
+      "id": "q4",
+      "type": "quotation",
+      "text": "De caelo, Aristotle, 350 BCE",
+      "author": "Aristotle"
+    }
+  ],
+  "edges": [
+    { "from": "b1", "to": "s1", "relation": "influences", "bidirection": "no" },
+    { "from": "b1", "to": "s2", "relation": "influences", "bidirection": "no" },
+    { "from": "b2", "to": "s3", "relation": "influences", "bidirection": "no" },
+    { "from": "b2", "to": "s4", "relation": "influences", "bidirection": "no" },
+    { "from": "b3", "to": "s1", "relation": "influences", "bidirection": "no" },
+    { "from": "b3", "to": "s4", "relation": "influences", "bidirection": "no" },
+    { "from": "a1", "to": "s1", "relation": "supports", "bidirection": "no" },
+    { "from": "q1", "to": "s1", "relation": "cites", "bidirection": "no" },
+    { "from": "q2", "to": "s2", "relation": "cites", "bidirection": "no" },
+    { "from": "q3", "to": "s3", "relation": "cites", "bidirection": "no" },
+    { "from": "q4", "to": "s3", "relation": "cites", "bidirection": "no" },
+    { "from": "q2", "to": "s4", "relation": "cites", "bidirection": "no" }
+  ]
+} 

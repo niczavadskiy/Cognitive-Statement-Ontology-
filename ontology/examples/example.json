@@ -1,0 +1,146 @@
+{
+    "nodes": [
+        {
+            "id": "bias1",
+            "type": "cognitive_bias",
+            "text": "Confirmation Bias"
+        },
+        {
+            "id": "bias2",
+            "type": "cognitive_bias",
+            "text": "Anchoring Bias"
+        },
+        {
+            "id": "bias3",
+            "type": "cognitive_bias",
+            "text": "Hindsight Bias"
+        },
+        {
+            "id": "stmt1",
+            "type": "statement",
+            "text": "People tend to seek information that confirms their existing beliefs",
+            "credibility": "green"
+        },
+        {
+            "id": "stmt2",
+            "type": "statement",
+            "text": "Initial information heavily influences subsequent judgments",
+            "credibility": "yellow"
+        },
+        {
+            "id": "stmt3",
+            "type": "statement",
+            "text": "After an event occurs, people believe they could have predicted it",
+            "credibility": "red"
+        },
+        {
+            "id": "stmt4",
+            "type": "statement",
+            "text": "Confirmation bias can lead to anchoring effects in decision making",
+            "credibility": "green"
+        },
+        {
+            "id": "stmt5",
+            "type": "statement",
+            "text": "Hindsight bias often reinforces confirmation bias",
+            "credibility": "yellow"
+        },
+        {
+            "id": "arg1",
+            "type": "argument",
+            "text": "Empirical evidence from cognitive psychology studies"
+        },
+        {
+            "id": "arg2",
+            "type": "argument",
+            "text": "Statistical analysis of decision-making patterns"
+        },
+        {
+            "id": "arg3",
+            "type": "argument",
+            "text": "Case studies in behavioral economics"
+        },
+        {
+            "id": "quote1",
+            "type": "quotation",
+            "text": "Kahneman & Tversky (1974): 'Judgment under uncertainty'"
+        },
+        {
+            "id": "quote2",
+            "type": "quotation",
+            "text": "Tversky & Kahneman (1973): 'Availability heuristic'"
+        }
+    ],
+    "edges": [
+        {
+            "from": "bias1",
+            "to": "stmt1",
+            "relation": "explains"
+        },
+        {
+            "from": "bias2",
+            "to": "stmt2",
+            "relation": "explains"
+        },
+        {
+            "from": "bias3",
+            "to": "stmt3",
+            "relation": "explains"
+        },
+        {
+            "from": "bias1",
+            "to": "bias2",
+            "relation": "influences"
+        },
+        {
+            "from": "bias2",
+            "to": "bias3",
+            "relation": "influences"
+        },
+        {
+            "from": "stmt1",
+            "to": "stmt4",
+            "relation": "supports"
+        },
+        {
+            "from": "stmt3",
+            "to": "stmt5",
+            "relation": "contradicts"
+        },
+        {
+            "from": "stmt2",
+            "to": "stmt4",
+            "relation": "supports"
+        },
+        {
+            "from": "arg1",
+            "to": "stmt1",
+            "relation": "supports"
+        },
+        {
+            "from": "arg2",
+            "to": "stmt2",
+            "relation": "supports"
+        },
+        {
+            "from": "arg3",
+            "to": "stmt3",
+            "relation": "supports"
+        },
+        {
+            "from": "quote1",
+            "to": "stmt1",
+            "relation": "cites"
+        },
+        {
+            "from": "quote2",
+            "to": "stmt2",
+            "relation": "cites"
+        },
+        {
+            "from": "stmt4",
+            "to": "stmt5",
+            "relation": "relates_to"
+        }
+    ]
+} 

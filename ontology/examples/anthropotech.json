@@ -1,0 +1,91 @@
+{
+  "nodes": [
+    {
+      "id": "s1",
+      "type": "statement",
+      "text": "Anthropotechnics is a field that studies the interaction between humans and technology.",
+      "credibility": "green"
+    },
+    {
+      "id": "s2",
+      "type": "statement",
+      "text": "Technology can enhance human cognitive abilities.",
+      "credibility": "green"
+    },
+    {
+      "id": "s3",
+      "type": "statement",
+      "text": "Anthropotechnics helps adapt technology to human needs.",
+      "credibility": "green"
+    },
+    {
+      "id": "s4",
+      "type": "statement",
+      "text": "Technology can cause addiction and negatively affect mental health.",
+      "credibility": "yellow"
+    },
+    {
+      "id": "b1",
+      "type": "cognitive_bias",
+      "bias_type": "optimism_bias",
+      "text": "Optimism Bias"
+    },
+    {
+      "id": "b2",
+      "type": "cognitive_bias",
+      "bias_type": "technological_determinism",
+      "text": "Technological Determinism"
+    },
+    {
+      "id": "a1",
+      "type": "argument",
+      "text": "Technology should develop with consideration for human needs"
+    },
+    {
+      "id": "a2",
+      "type": "argument",
+      "text": "It is necessary to consider the risks of technological dependency"
+    },
+    {
+      "id": "q1",
+      "type": "quotation",
+      "text": "The Human Condition, Hannah Arendt, 1958",
+      "author": "Hannah Arendt"
+    },
+    {
+      "id": "q2",
+      "type": "quotation",
+      "text": "Technics and Civilization, Lewis Mumford, 1934",
+      "author": "Lewis Mumford"
+    },
+    {
+      "id": "q3",
+      "type": "quotation",
+      "text": "The Question Concerning Technology, Martin Heidegger, 1954",
+      "author": "Martin Heidegger"
+    },
+    {
+      "id": "q4",
+      "type": "quotation",
+      "text": "The Singularity Is Near, Ray Kurzweil, 2005",
+      "author": "Ray Kurzweil"
+    }
+  ],
+  "edges": [
+    { "from": "b1", "to": "s1", "relation": "influences", "bidirection": "no" },
+    { "from": "b1", "to": "s2", "relation": "influences", "bidirection": "no" },
+    { "from": "b1", "to": "s3", "relation": "influences", "bidirection": "no" },
+    { "from": "b2", "to": "s1", "relation": "influences", "bidirection": "no" },
+    { "from": "b2", "to": "s2", "relation": "influences", "bidirection": "no" },
+    { "from": "b2", "to": "s3", "relation": "influences", "bidirection": "no" },
+    { "from": "b2", "to": "s4", "relation": "influences", "bidirection": "no" },
+    { "from": "q1", "to": "s1", "relation": "cites", "bidirection": "no" },
+    { "from": "q2", "to": "s2", "relation": "cites", "bidirection": "no" },
+    { "from": "q3", "to": "s3", "relation": "cites", "bidirection": "no" },
+    { "from": "q4", "to": "s4", "relation": "cites", "bidirection": "no" },
+    { "from": "s1", "to": "a1", "relation": "supports", "bidirection": "no" },
+    { "from": "s2", "to": "a1", "relation": "supports", "bidirection": "no" },
+    { "from": "s3", "to": "a1", "relation": "supports", "bidirection": "no" },
+    { "from": "s4", "to": "a2", "relation": "supports", "bidirection": "no" }
+  ]
+} 
