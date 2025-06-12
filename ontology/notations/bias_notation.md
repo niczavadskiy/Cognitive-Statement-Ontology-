@@ -82,4 +82,4 @@ python tools/render_graph.py <input_file> bias
 ```
 
 ## Example
-![Example of bias-oriented notation](../examples/visualisations/example_bias.png) 
+![Example of bias-oriented notation](../../visualisations/example_bias.png) 

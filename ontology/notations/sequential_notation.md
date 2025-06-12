@@ -78,4 +78,4 @@ python tools/render_graph.py <input_file> sequential
 ```
 
 ## Example
-![Example of sequential notation](../examples/visualisations/example_sequential.png) 
+![Example of sequential notation](../../visualisations/example_sequential.png) 

@@ -98,4 +98,4 @@ python tools/render_graph.py <input_file> context
 ```
 
 ## Example
-![Example of context-oriented notation](../examples/visualisations/example_context.png) 
+![Example of context-oriented notation](../../visualisations/example_context.png) 
