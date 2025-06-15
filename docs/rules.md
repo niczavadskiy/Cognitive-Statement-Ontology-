@@ -11,6 +11,16 @@
 
 ## JSON File Rules
 
+### Required Metadata Fields
+
+1. **Ontology Metadata**
+   - `id_author` (string): Unique identifier of the ontology author
+   - `name_author` (string): Full name of the ontology author
+   - `date_time` (string): When the ontology was created or last modified (ISO 8601 format)
+   - `source` (string): Source or origin of the ontology
+   - These fields are required and must be present in the metadata section
+   - Each ontology can have only one set of these metadata fields
+
 ### Required Fields for Nodes
 
 1. **Statement**
@@ -18,7 +28,6 @@
    - `type` (string): must be "statement"
    - `text` (string): statement content
    - `credibility` (string): credibility level
-   - `source` (string): statement source
    - `timestamp` (string): creation time
    - `biases` (array): list of bias IDs
    - `quotes` (array): list of quote IDs
@@ -45,7 +54,6 @@
    - `type` (string): must be "quotation"
    - `text` (string): quote content
    - `author` (string): quote author
-   - `source` (string): quote source
    - `timestamp` (string): quote time
    - `statements` (array): list of statement IDs
 
