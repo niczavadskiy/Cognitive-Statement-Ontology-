@@ -88,10 +88,10 @@ def create_context_oriented_graph(data: Dict) -> graphviz.Digraph:
     # Create a mapping of statements to their connected biases
     statement_bias_map = {}
     for edge in edges:
-        if edge['from'] in [b['id'] for b in biases] and edge['to'] in [s['id'] for s in statements]:
-            if edge['to'] not in statement_bias_map:
-                statement_bias_map[edge['to']] = []
-            statement_bias_map[edge['to']].append(edge['from'])
+        if edge['source'] in [b['id'] for b in biases] and edge['target'] in [s['id'] for s in statements]:
+            if edge['target'] not in statement_bias_map:
+                statement_bias_map[edge['target']] = []
+            statement_bias_map[edge['target']].append(edge['source'])
     
     # Check if there are any statements without bias connections
     has_no_bias_statements = any(statement['id'] not in statement_bias_map for statement in statements)
@@ -213,7 +213,7 @@ def create_context_oriented_graph(data: Dict) -> graphviz.Digraph:
                fontname='Arial Bold')
         
         # Get all citations
-        citations = [nodes[edge['from']] for edge in edges if nodes[edge['from']]['type'] == 'quotation']
+        citations = [nodes[edge['source']] for edge in edges if nodes[edge['source']]['type'] == 'quotation']
         
         # Calculate context box height based on number of citations
         context_height = len(statements) * 2 + 2  # Base height
@@ -241,9 +241,9 @@ def create_context_oriented_graph(data: Dict) -> graphviz.Digraph:
     
     # Add edges between statements and citations
     for edge in edges:
-        if nodes[edge['from']]['type'] == 'quotation' and edge['to'] in [s['id'] for s in statements]:
+        if nodes[edge['source']]['type'] == 'quotation' and edge['target'] in [s['id'] for s in statements]:
             # Find the rightmost node for this statement
-            statement = edge['to']
+            statement = edge['target']
             connected_biases = statement_bias_map.get(statement, [])
             if len(connected_biases) > 1:
                 # Use the last node (rightmost)
@@ -252,7 +252,7 @@ def create_context_oriented_graph(data: Dict) -> graphviz.Digraph:
                 target_node = f"{statement}_{last_bias}"
             else:
                 target_node = statement
-            dot.edge(target_node, edge['from'])
+            dot.edge(target_node, edge['source'])
     
     return dot
 
@@ -280,10 +280,10 @@ def create_hierarchical_graph(data: Dict) -> graphviz.Digraph:
     # Create a mapping of statements to their connected biases
     statement_bias_map = {}
     for edge in edges:
-        if edge['from'] in [b['id'] for b in biases] and edge['to'] in [s['id'] for s in statements]:
-            if edge['to'] not in statement_bias_map:
-                statement_bias_map[edge['to']] = []
-            statement_bias_map[edge['to']].append(edge['from'])
+        if edge['source'] in [b['id'] for b in biases] and edge['target'] in [s['id'] for s in statements]:
+            if edge['target'] not in statement_bias_map:
+                statement_bias_map[edge['target']] = []
+            statement_bias_map[edge['target']].append(edge['source'])
     
     # Calculate total width for biases (excluding context)
     total_width = 20  # Total width of the graph
@@ -361,7 +361,7 @@ def create_hierarchical_graph(data: Dict) -> graphviz.Digraph:
                fontname='Arial Bold')
         
         # Get all citations
-        citations = [nodes[edge['from']] for edge in edges if nodes[edge['from']]['type'] == 'quotation']
+        citations = [nodes[edge['source']] for edge in edges if nodes[edge['source']]['type'] == 'quotation']
         
         # Calculate context box height based on number of citations
         context_height = len(statements) * 2 + 2  # Base height
@@ -389,8 +389,8 @@ def create_hierarchical_graph(data: Dict) -> graphviz.Digraph:
     
     # Add edges between statements and citations
     for edge in edges:
-        if nodes[edge['from']]['type'] == 'quotation' and edge['to'] in [s['id'] for s in statements]:
-            dot.edge(edge['to'], edge['from'])
+        if nodes[edge['source']]['type'] == 'quotation' and edge['target'] in [s['id'] for s in statements]:
+            dot.edge(edge['target'], edge['source'])
     
     return dot
 
@@ -424,10 +424,10 @@ def create_bias_oriented_graph(data: Dict) -> graphviz.Digraph:
     # Create a mapping of statements to their connected biases
     statement_bias_map = {}
     for edge in edges:
-        if edge['from'] in [b['id'] for b in biases] and edge['to'] in [s['id'] for s in statements]:
-            if edge['to'] not in statement_bias_map:
-                statement_bias_map[edge['to']] = []
-            statement_bias_map[edge['to']].append(edge['from'])
+        if edge['source'] in [b['id'] for b in biases] and edge['target'] in [s['id'] for s in statements]:
+            if edge['target'] not in statement_bias_map:
+                statement_bias_map[edge['target']] = []
+            statement_bias_map[edge['target']].append(edge['source'])
     
     # Calculate connection weights between biases
     bias_connections = {}  # For shared statements
@@ -444,9 +444,9 @@ def create_bias_oriented_graph(data: Dict) -> graphviz.Digraph:
     
     # Calculate direct bias-to-bias connections
     for edge in edges:
-        if (nodes[edge['from']]['type'] == 'cognitive_bias' and 
-            nodes[edge['to']]['type'] == 'cognitive_bias'):
-            pair = tuple(sorted([edge['from'], edge['to']]))
+        if (nodes[edge['source']]['type'] == 'cognitive_bias' and 
+            nodes[edge['target']]['type'] == 'cognitive_bias'):
+            pair = tuple(sorted([edge['source'], edge['target']]))
             direct_bias_connections[pair] = direct_bias_connections.get(pair, 0) + 1
     
     # Calculate total connections (sum of both types)
@@ -647,7 +647,7 @@ def create_sequential_graph(data: Dict) -> graphviz.Digraph:
     # Create dictionaries for quick lookup
     nodes = {node['id']: node for node in data['nodes'] if node['type'] != 'quotation'}  # Exclude quotations
     edges = [edge for edge in data['edges'] 
-             if edge['from'] in nodes and edge['to'] in nodes]  # Only include edges between non-quotation nodes
+             if edge['source'] in nodes and edge['target'] in nodes]  # Only include edges between non-quotation nodes
     
     # Define colors
     colors = {
@@ -724,7 +724,7 @@ def create_sequential_graph(data: Dict) -> graphviz.Digraph:
         width, height, wrapped_text = calculate_node_dimensions(arg['text'], max_width=15)
         
         # Find all nodes this argument connects to
-        connected = [e['to'] for e in edges if e['from'] == arg['id']]
+        connected = [e['target'] for e in edges if e['source'] == arg['id']]
         if connected:
             # Calculate average X position of connected nodes
             avg_x = sum(node_positions[c]['x'] + node_positions[c]['width']/2 for c in connected if c in node_positions) / len(connected)
@@ -797,8 +797,8 @@ def create_sequential_graph(data: Dict) -> graphviz.Digraph:
     
     # Add edges
     for edge in edges:
-        dot.edge(edge['from'], 
-                edge['to'],
+        dot.edge(edge['source'], 
+                edge['target'],
                 fontsize='50')
     
     # Calculate and set final canvas size
