@@ -73,74 +73,83 @@
     ],
     "edges": [
         {
-            "from": "bias1",
-            "to": "stmt1",
-            "relation": "explains"
-        },
-        {
-            "from": "bias2",
-            "to": "stmt2",
-            "relation": "explains"
-        },
-        {
-            "from": "bias3",
-            "to": "stmt3",
-            "relation": "explains"
-        },
-        {
-            "from": "bias1",
-            "to": "bias2",
+            "source": "bias1",
+            "target": "stmt1",
             "relation": "influences"
         },
         {
-            "from": "bias2",
-            "to": "bias3",
+            "source": "bias2",
+            "target": "stmt2",
             "relation": "influences"
         },
         {
-            "from": "stmt1",
-            "to": "stmt4",
+            "source": "bias3",
+            "target": "stmt3",
+            "relation": "influences"
+        },
+        {
+            "source": "bias1",
+            "target": "bias2",
+            "relation": "influences"
+        },
+        {
+            "source": "bias2",
+            "target": "bias3",
+            "relation": "influences"
+        },
+        {
+            "source": "stmt1",
+            "target": "stmt4",
             "relation": "supports"
         },
         {
-            "from": "stmt3",
-            "to": "stmt5",
+            "source": "stmt3",
+            "target": "stmt5",
             "relation": "contradicts"
         },
         {
-            "from": "stmt2",
-            "to": "stmt4",
+            "source": "stmt2",
+            "target": "stmt4",
             "relation": "supports"
         },
         {
-            "from": "arg1",
-            "to": "stmt1",
+            "source": "arg1",
+            "target": "stmt1",
             "relation": "supports"
         },
         {
-            "from": "arg2",
-            "to": "stmt2",
+            "source": "arg2",
+            "target": "stmt2",
             "relation": "supports"
         },
         {
-            "from": "arg3",
-            "to": "stmt3",
+            "source": "arg3",
+            "target": "stmt3",
             "relation": "supports"
         },
         {
-            "from": "quote1",
-            "to": "stmt1",
+            "source": "quote1",
+            "target": "stmt1",
             "relation": "cites"
         },
         {
-            "from": "quote2",
-            "to": "stmt2",
+            "source": "quote2",
+            "target": "stmt2",
             "relation": "cites"
         },
         {
-            "from": "stmt4",
-            "to": "stmt5",
-            "relation": "relates_to"
+            "source": "stmt4",
+            "target": "stmt5",
+            "relation": "related_to"
         }
-    ]
+    ],
+    "metadata": {
+        "title": "Cognitive Biases Example",
+        "description": "Example ontology demonstrating various cognitive biases and their relationships",
+        "id_author": "example_author",
+        "name_author": "Example Author",
+        "date_time": "2024-01-01T00:00:00Z",
+        "source": "Cognitive psychology research",
+        "version": "1.0.0"
+    }
 } 

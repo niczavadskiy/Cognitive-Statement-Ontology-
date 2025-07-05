@@ -21,13 +21,11 @@
     {
       "id": "b1",
       "type": "cognitive_bias",
-      "bias_type": "confirmation_bias",
       "text": "Confirmation Bias"
     },
     {
       "id": "b2",
       "type": "cognitive_bias",
-      "bias_type": "availability_heuristic",
       "text": "Availability Heuristic"
     },
     {
@@ -49,13 +47,13 @@
     }
   ],
   "edges": [
-    { "from": "b1", "to": "s1", "relation": "influences", "bidirection": "no" },
-    { "from": "b1", "to": "s3", "relation": "influences", "bidirection": "no" },
-    { "from": "b2", "to": "s2", "relation": "influences", "bidirection": "no" },
-    { "from": "b2", "to": "s3", "relation": "influences", "bidirection": "no" },
-    { "from": "q1", "to": "s1", "relation": "cites", "bidirection": "no" },
-    { "from": "q2", "to": "s2", "relation": "cites", "bidirection": "no" },
-    { "from": "q2", "to": "s3", "relation": "cites", "bidirection": "no" },
+    { "source": "b1", "target": "s1", "relation": "influences" },
+    { "source": "b1", "target": "s3", "relation": "influences" },
+    { "source": "b2", "target": "s2", "relation": "influences" },
+    { "source": "b2", "target": "s3", "relation": "influences" },
+    { "source": "q1", "target": "s1", "relation": "cites" },
+    { "source": "q2", "target": "s2", "relation": "cites" },
+    { "source": "q2", "target": "s3", "relation": "cites" },
     {
       "source": "q1",
       "target": "s1",
@@ -71,5 +69,14 @@
       "target": "a1",
       "relation": "supports"
     }
-  ]
+  ],
+  "metadata": {
+    "title": "Mini Example",
+    "description": "A minimal example of cognitive ontology",
+    "id_author": "mini_author",
+    "name_author": "Mini Author",
+    "date_time": "2024-01-01T00:00:00Z",
+    "source": "Example creation",
+    "version": "1.0.0"
+  }
 }

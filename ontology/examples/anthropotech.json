@@ -27,13 +27,11 @@
     {
       "id": "b1",
       "type": "cognitive_bias",
-      "bias_type": "optimism_bias",
       "text": "Optimism Bias"
     },
     {
       "id": "b2",
       "type": "cognitive_bias",
-      "bias_type": "technological_determinism",
       "text": "Technological Determinism"
     },
     {
@@ -72,20 +70,29 @@
     }
   ],
   "edges": [
-    { "from": "b1", "to": "s1", "relation": "influences", "bidirection": "no" },
-    { "from": "b1", "to": "s2", "relation": "influences", "bidirection": "no" },
-    { "from": "b1", "to": "s3", "relation": "influences", "bidirection": "no" },
-    { "from": "b2", "to": "s1", "relation": "influences", "bidirection": "no" },
-    { "from": "b2", "to": "s2", "relation": "influences", "bidirection": "no" },
-    { "from": "b2", "to": "s3", "relation": "influences", "bidirection": "no" },
-    { "from": "b2", "to": "s4", "relation": "influences", "bidirection": "no" },
-    { "from": "q1", "to": "s1", "relation": "cites", "bidirection": "no" },
-    { "from": "q2", "to": "s2", "relation": "cites", "bidirection": "no" },
-    { "from": "q3", "to": "s3", "relation": "cites", "bidirection": "no" },
-    { "from": "q4", "to": "s4", "relation": "cites", "bidirection": "no" },
-    { "from": "s1", "to": "a1", "relation": "supports", "bidirection": "no" },
-    { "from": "s2", "to": "a1", "relation": "supports", "bidirection": "no" },
-    { "from": "s3", "to": "a1", "relation": "supports", "bidirection": "no" },
-    { "from": "s4", "to": "a2", "relation": "supports", "bidirection": "no" }
-  ]
+    { "source": "b1", "target": "s1", "relation": "influences" },
+    { "source": "b1", "target": "s2", "relation": "influences" },
+    { "source": "b1", "target": "s3", "relation": "influences" },
+    { "source": "b2", "target": "s1", "relation": "influences" },
+    { "source": "b2", "target": "s2", "relation": "influences" },
+    { "source": "b2", "target": "s3", "relation": "influences" },
+    { "source": "b2", "target": "s4", "relation": "influences" },
+    { "source": "q1", "target": "s1", "relation": "cites" },
+    { "source": "q2", "target": "s2", "relation": "cites" },
+    { "source": "q3", "target": "s3", "relation": "cites" },
+    { "source": "q4", "target": "s4", "relation": "cites" },
+    { "source": "s1", "target": "a1", "relation": "supports" },
+    { "source": "s2", "target": "a1", "relation": "supports" },
+    { "source": "s3", "target": "a1", "relation": "supports" },
+    { "source": "s4", "target": "a2", "relation": "supports" }
+  ],
+  "metadata": {
+    "title": "Anthropotechnics Ontology",
+    "description": "Ontology exploring the relationship between humans and technology",
+    "id_author": "anthropotech_author",
+    "name_author": "Anthropotech Author",
+    "date_time": "2024-01-01T00:00:00Z",
+    "source": "Technology philosophy research",
+    "version": "1.0.0"
+  }
 } 

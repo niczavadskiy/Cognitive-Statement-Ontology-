@@ -27,13 +27,11 @@
     {
       "id": "b1",
       "type": "cognitive_bias",
-      "bias_type": "curiosity_bias",
       "text": "Curiosity Bias"
     },
     {
       "id": "b2",
       "type": "cognitive_bias",
-      "bias_type": "risk_seeking",
       "text": "Risk-Seeking Bias"
     },
     {
@@ -72,15 +70,24 @@
     }
   ],
   "edges": [
-    { "from": "b1", "to": "s1", "relation": "influences", "bidirection": "no" },
-    { "from": "b2", "to": "s3", "relation": "influences", "bidirection": "no" },
-    { "from": "q1", "to": "s1", "relation": "cites", "bidirection": "no" },
-    { "from": "q2", "to": "s2", "relation": "cites", "bidirection": "no" },
-    { "from": "q3", "to": "s4", "relation": "cites", "bidirection": "no" },
-    { "from": "q4", "to": "s3", "relation": "cites", "bidirection": "no" },
-    { "from": "s1", "to": "a1", "relation": "supports", "bidirection": "no" },
-    { "from": "s2", "to": "a1", "relation": "supports", "bidirection": "no" },
-    { "from": "s3", "to": "a2", "relation": "supports", "bidirection": "no" },
-    { "from": "s4", "to": "a1", "relation": "supports", "bidirection": "no" }
-  ]
+    { "source": "b1", "target": "s1", "relation": "influences" },
+    { "source": "b2", "target": "s3", "relation": "influences" },
+    { "source": "q1", "target": "s1", "relation": "cites" },
+    { "source": "q2", "target": "s2", "relation": "cites" },
+    { "source": "q3", "target": "s4", "relation": "cites" },
+    { "source": "q4", "target": "s3", "relation": "cites" },
+    { "source": "s1", "target": "a1", "relation": "supports" },
+    { "source": "s2", "target": "a1", "relation": "supports" },
+    { "source": "s3", "target": "a2", "relation": "supports" },
+    { "source": "s4", "target": "a1", "relation": "supports" }
+  ],
+  "metadata": {
+    "title": "Curiosity Ontology",
+    "description": "Ontology exploring the concept of curiosity and its cognitive aspects",
+    "id_author": "curiosity_author",
+    "name_author": "Curiosity Author",
+    "date_time": "2024-01-01T00:00:00Z",
+    "source": "Psychology research",
+    "version": "1.0.0"
+  }
 } 

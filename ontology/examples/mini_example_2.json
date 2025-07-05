@@ -27,19 +27,16 @@
     {
       "id": "b1",
       "type": "cognitive_bias",
-      "bias_type": "authority_bias",
       "text": "Authority Bias"
     },
     {
       "id": "b2",
       "type": "cognitive_bias",
-      "bias_type": "confirmation_bias",
       "text": "Confirmation Bias"
     },
     {
       "id": "b3",
       "type": "cognitive_bias",
-      "bias_type": "status_quo_bias",
       "text": "Status Quo Bias"
     },
     {
@@ -73,17 +70,26 @@
     }
   ],
   "edges": [
-    { "from": "b1", "to": "s1", "relation": "influences", "bidirection": "no" },
-    { "from": "b1", "to": "s2", "relation": "influences", "bidirection": "no" },
-    { "from": "b2", "to": "s3", "relation": "influences", "bidirection": "no" },
-    { "from": "b2", "to": "s4", "relation": "influences", "bidirection": "no" },
-    { "from": "b3", "to": "s1", "relation": "influences", "bidirection": "no" },
-    { "from": "b3", "to": "s4", "relation": "influences", "bidirection": "no" },
-    { "from": "a1", "to": "s1", "relation": "supports", "bidirection": "no" },
-    { "from": "q1", "to": "s1", "relation": "cites", "bidirection": "no" },
-    { "from": "q2", "to": "s2", "relation": "cites", "bidirection": "no" },
-    { "from": "q3", "to": "s3", "relation": "cites", "bidirection": "no" },
-    { "from": "q4", "to": "s3", "relation": "cites", "bidirection": "no" },
-    { "from": "q2", "to": "s4", "relation": "cites", "bidirection": "no" }
-  ]
+    { "source": "b1", "target": "s1", "relation": "influences" },
+    { "source": "b1", "target": "s2", "relation": "influences" },
+    { "source": "b2", "target": "s3", "relation": "influences" },
+    { "source": "b2", "target": "s4", "relation": "influences" },
+    { "source": "b3", "target": "s1", "relation": "influences" },
+    { "source": "b3", "target": "s4", "relation": "influences" },
+    { "source": "a1", "target": "s1", "relation": "supports" },
+    { "source": "q1", "target": "s1", "relation": "cites" },
+    { "source": "q2", "target": "s2", "relation": "cites" },
+    { "source": "q3", "target": "s3", "relation": "cites" },
+    { "source": "q4", "target": "s3", "relation": "cites" },
+    { "source": "q2", "target": "s4", "relation": "cites" }
+  ],
+  "metadata": {
+    "title": "Mini Example 2 - Geocentric Model",
+    "description": "Example ontology about historical geocentric model beliefs",
+    "id_author": "mini2_author",
+    "name_author": "Mini2 Author",
+    "date_time": "2024-01-01T00:00:00Z",
+    "source": "Historical astronomy",
+    "version": "1.0.0"
+  }
 } 
