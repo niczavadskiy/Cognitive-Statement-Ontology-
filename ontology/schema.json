@@ -20,6 +20,16 @@
             "enum": ["statement", "argument", "cognitive_bias", "quotation"],
             "description": "Type of the node"
           },
+          "manifestation_of_ones_thought": {
+            "type": "integer",
+            "enum": [0, 1],
+            "description": "1 if the author manifests this cognitive bias, 0 otherwise. Applicable only to nodes of type cognitive_bias."
+          },
+          "fixation_of_someones_bias": {
+            "type": "integer",
+            "enum": [0, 1],
+            "description": "1 if the author records someone else's cognitive bias, 0 otherwise. Applicable only to nodes of type cognitive_bias."
+          },
           "text": { 
             "type": "string",
             "description": "Content of the node",
@@ -163,7 +173,7 @@
           "type": "string",
           "description": "Version of the schema used",
           "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
-          "default": "1.0.0"
+          "default": "1.0.2"
         }
       },
       "required": ["id_author", "name_author", "date_time", "source", "version"]
