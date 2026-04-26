@@ -12,14 +12,30 @@ This project provides a framework for analyzing and visualizing cognitive statem
   - `notations/` — different visualization notations
   - `examples/` — example data files
 - `docs/` — project documentation
-  - [Definition and Scope](docs/definition.md)
-  - [Ontology Rules](docs/rules.md)
-  - [Use Cases](docs/use_cases.md)
-  - [Working with Cognitive Biases](docs/cognitive_biases.md)
-  - [Statement Credibility Assessment](docs/credibility.md)
-  - [Notation Comparison](docs/comparison.md)
+  - [Definition and Scope](definition.md)
+  - [Ontology Rules](rules.md)
+  - [Use Cases](use_cases.md)
+  - [Working with Cognitive Biases](cognitive_biases.md)
+  - [Statement Credibility Assessment](credibility.md)
+  - [Notation Comparison](comparison.md)
+  - [Bayesian Layer Overview](bayesian_overview.md)
+  - [Bayesian Schema Extensions](bayesian_schema.md)
+  - [Bayesian Inference Workflow](bayesian_inference_workflow.md)
+  - [Debiasing Methodology](debiasing_methodology.md)
+  - [Evaluation and Benchmarks](evaluation_benchmarks.md)
 - `tools/` — visualization and analysis tools
   - [Technical Documentation](../tools/README.md)
+
+## Probabilistic layer (Bayesian)
+
+CSO includes an optional probabilistic layer for quantitative assessment of statement graphs:
+
+- prior and posterior probabilities for nodes
+- evidence strength via Bayes factors
+- influence weighting on edges
+- debiasing and post-processing for cognitive bias correction
+
+See [Bayesian Layer Overview](bayesian_overview.md) and [Bayesian Inference Workflow](bayesian_inference_workflow.md).
 
 ## Supported Notations
 
@@ -31,4 +47,4 @@ The project supports multiple visualization notations to represent cognitive sta
 
 ## Getting Started
 
-For technical setup and usage instructions, please refer to the [Tools Documentation](../tools/README.md) 
+For technical setup and usage instructions, please refer to the [Tools Documentation](../tools/README.md).
