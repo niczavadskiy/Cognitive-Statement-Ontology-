@@ -1,0 +1,212 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Cognitive Ontology Schema - Bayesian Extension",
+  "description": "Schema for Cognitive Statement Ontology with Bayesian probability calculations using theta and eta parameters",
+  "type": "object",
+  "required": ["nodes", "edges"],
+  "properties": {
+    "nodes": {
+      "type": "array",
+      "description": "List of nodes in the cognitive ontology",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "text"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the node"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["statement", "argument", "cognitive_bias", "quotation", "question"],
+            "description": "Type of the node"
+          },
+          "text": {
+            "type": "string",
+            "description": "Text content of the node"
+          },
+          "prior_probability": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Prior probability of the statement/argument being true (for statements and arguments)",
+            "default": 0.5
+          },
+          "posterior_probability": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Posterior probability of the argument being true (CALCULATED AUTOMATICALLY - do not manually set)",
+            "default": 0.5
+          },
+          "manifestation_of_ones_thought": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Whether the author manifests this cognitive bias in their own thinking (for cognitive_bias nodes only)",
+            "default": 0
+          },
+          "fixation_of_someones_bias": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Whether the author identifies this cognitive bias as problematic (for cognitive_bias nodes only)",
+            "default": 0
+          },
+          "vfe": {
+            "type": "object",
+            "description": "Variational Free Energy metrics (CALCULATED AUTOMATICALLY - do not manually set)",
+            "properties": {
+              "variational_free_energy": {
+                "type": "number",
+                "description": "Total VFE - main quality metric (lower is better)"
+              },
+              "log_evidence": {
+                "type": "number",
+                "description": "Surprise/accuracy term (-ln(marginal_evidence))"
+              },
+              "marginal_evidence": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1,
+                "description": "Probability of evidence given model"
+              },
+              "kl_divergence": {
+                "type": "number",
+                "description": "Complexity penalty - KL divergence between posterior and prior"
+              },
+              "accuracy_part": {
+                "type": "number",
+                "description": "Accuracy part of VFE (F_k^acc) - only S→A factors, without KL prior"
+              },
+              "F_bar_k": {
+                "type": "number",
+                "description": "Normalized F_k = F_k^VFE / (1 + |E_k|), where F_k^VFE is the full Variational Free Energy"
+              },
+              "edges_count": {
+                "type": "integer",
+                "description": "Number of S→A edges for this argument (|E_k|)"
+              },
+              "predictability_contribution": {
+                "type": "number",
+                "description": "Contribution to P_tot: e^(-F̄_k)"
+              }
+            }
+          }
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "description": "List of relationships between nodes",
+      "items": {
+        "type": "object",
+        "required": ["source", "target", "relation", "theta_i1", "theta_i0"],
+        "properties": {
+          "source": {
+            "type": "string",
+            "description": "ID of the source node"
+          },
+          "target": {
+            "type": "string",
+            "description": "ID of the target node"
+          },
+          "relation": {
+            "type": "string",
+            "description": "Type of relationship between nodes"
+          },
+          
+          "theta_i1": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "P(target=1 | source=1) for any edge type"
+          },
+          "theta_i0": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "P(target=1 | source=0) for any edge type"
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Metadata about the CSO analysis",
+      "properties": {
+        "version": {
+          "type": "string",
+          "default": "2.0.0"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the analyzed document"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the analysis"
+        },
+        "author": {
+          "type": "string",
+          "description": "Author of the analyzed text"
+        },
+        "analysis_timestamp": {
+          "type": "string",
+          "description": "Timestamp when the analysis was performed"
+        },
+        "probability_calculations": {
+          "type": "object",
+          "description": "Summary of Bayesian probability calculations performed"
+        },
+        "calculation_timestamp": {
+          "type": "string",
+          "description": "Timestamp when probability calculations were performed"
+        },
+        "total_predictability": {
+          "type": "object",
+          "description": "Total Predictability metrics for argumentation system (CALCULATED AUTOMATICALLY)",
+          "properties": {
+            "total_predictability": {
+              "type": "number",
+              "description": "P_tot = Σ_k e^(-F̄_k) - total predictability (higher is better)"
+            },
+            "arguments_count": {
+              "type": "integer",
+              "description": "Number of arguments included in calculation"
+            },
+            "average_contribution": {
+              "type": "number",
+              "description": "Average contribution per argument"
+            },
+            "arguments_contributions": {
+              "type": "array",
+              "description": "Detailed contributions from each argument",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "argument_id": {
+                    "type": "string"
+                  },
+                  "F_k_vfe": {
+                    "type": "number",
+                    "description": "Full Variational Free Energy (variational_free_energy = accuracy_part + kl_divergence)"
+                  },
+                  "edges_count": {
+                    "type": "integer"
+                  },
+                  "F_bar_k": {
+                    "type": "number"
+                  },
+                  "contribution": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
