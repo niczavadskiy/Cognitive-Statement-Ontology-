@@ -1,0 +1,327 @@
+{
+  "nodes": [
+    {
+      "id": "curiosity_stmt1",
+      "type": "statement",
+      "text": "Curiosity enhances learning and knowledge acquisition",
+      "credibility": "green",
+      "prior_probability": 0.8,
+      "metadata": {
+        "tags": [
+          "curiosity",
+          "learning",
+          "education"
+        ],
+        "confidence": 0.85,
+        "evidence_strength": "strong"
+      }
+    },
+    {
+      "id": "curiosity_stmt2",
+      "type": "statement",
+      "text": "Intrinsic curiosity is more effective than extrinsic motivation for deep learning",
+      "credibility": "yellow",
+      "prior_probability": 0.65,
+      "metadata": {
+        "tags": [
+          "intrinsic",
+          "motivation",
+          "deep_learning"
+        ],
+        "confidence": 0.7,
+        "evidence_strength": "moderate"
+      }
+    },
+    {
+      "id": "curiosity_stmt3",
+      "type": "statement",
+      "text": "Curiosity can be systematically developed through specific practices",
+      "credibility": "gray",
+      "prior_probability": 0.55,
+      "metadata": {
+        "tags": [
+          "development",
+          "practices",
+          "training"
+        ],
+        "confidence": 0.6,
+        "evidence_strength": "weak"
+      }
+    },
+    {
+      "id": "arg_neuroscience",
+      "type": "argument",
+      "text": "Neuroimaging studies show curiosity activates reward and memory circuits",
+      "prior_probability": 0.85,
+      "posterior_probability": 0.87,
+      "metadata": {
+        "tags": [
+          "neuroscience",
+          "neuroimaging",
+          "brain"
+        ],
+        "confidence": 0.9,
+        "evidence_strength": "very_strong"
+      }
+    },
+    {
+      "id": "arg_educational",
+      "type": "argument",
+      "text": "Educational research on curiosity-driven vs traditional learning",
+      "prior_probability": 0.75,
+      "posterior_probability": 0.79,
+      "metadata": {
+        "tags": [
+          "education",
+          "research",
+          "comparison"
+        ],
+        "confidence": 0.8,
+        "evidence_strength": "strong"
+      }
+    },
+    {
+      "id": "arg_developmental",
+      "type": "argument",
+      "text": "Child development studies on natural curiosity patterns",
+      "prior_probability": 0.7,
+      "posterior_probability": 0.73,
+      "metadata": {
+        "tags": [
+          "development",
+          "children",
+          "natural"
+        ],
+        "confidence": 0.75,
+        "evidence_strength": "strong"
+      }
+    },
+    {
+      "id": "arg_intervention",
+      "type": "argument",
+      "text": "Pilot studies on curiosity-enhancement interventions",
+      "prior_probability": 0.6,
+      "posterior_probability": 0.65,
+      "metadata": {
+        "tags": [
+          "intervention",
+          "enhancement",
+          "pilot"
+        ],
+        "confidence": 0.65,
+        "evidence_strength": "moderate"
+      }
+    },
+    {
+      "id": "arg_cross_cultural",
+      "type": "argument",
+      "text": "Cross-cultural variations in curiosity expression and development",
+      "prior_probability": 0.5,
+      "posterior_probability": 0.52,
+      "metadata": {
+        "tags": [
+          "culture",
+          "variation",
+          "development"
+        ],
+        "confidence": 0.55,
+        "evidence_strength": "moderate"
+      }
+    },
+    {
+      "id": "bias_novelty",
+      "type": "cognitive_bias",
+      "text": "Novelty Bias - Preference for new information over systematic learning",
+      "manifestation_of_ones_thought": 1,
+      "fixation_of_someones_bias": 0,
+      "metadata": {
+        "tags": [
+          "bias",
+          "novelty",
+          "systematic"
+        ],
+        "notes": "May interfere with deep, systematic learning despite appearing as curiosity"
+      }
+    },
+    {
+      "id": "bias_confirmation_curiosity",
+      "type": "cognitive_bias",
+      "text": "Curiosity-driven Confirmation Bias - Seeking novel information that confirms existing beliefs",
+      "manifestation_of_ones_thought": 0,
+      "fixation_of_someones_bias": 1,
+      "metadata": {
+        "tags": [
+          "bias",
+          "confirmation",
+          "curiosity"
+        ],
+        "notes": "Pseudo-curiosity that maintains existing beliefs while appearing open-minded"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "curiosity_stmt1",
+      "target": "arg_neuroscience",
+      "relation": "supports",
+      "strength": 0.9,
+      "bayes_factor": 9.0,
+      "weight": 0.9,
+      "metadata": {
+        "context": "Strong neurobiological evidence for curiosity-learning connection",
+        "evidence_type": "direct",
+        "confidence_interval": {
+          "lower": 0.8,
+          "upper": 0.95
+        }
+      },
+      "theta_i1": 0.91,
+      "theta_i0": 0.14
+    },
+    {
+      "source": "curiosity_stmt2",
+      "target": "arg_educational",
+      "relation": "supports",
+      "strength": 0.75,
+      "bayes_factor": 3.0,
+      "weight": 0.8,
+      "metadata": {
+        "context": "Educational studies favor intrinsic over extrinsic motivation",
+        "evidence_type": "statistical",
+        "confidence_interval": {
+          "lower": 0.6,
+          "upper": 0.85
+        }
+      },
+      "theta_i1": 0.84,
+      "theta_i0": 0.2
+    },
+    {
+      "source": "curiosity_stmt1",
+      "target": "arg_developmental",
+      "relation": "supports",
+      "strength": 0.7,
+      "bayes_factor": 2.3,
+      "weight": 0.7,
+      "metadata": {
+        "context": "Child development shows natural curiosity-learning link",
+        "evidence_type": "direct",
+        "confidence_interval": {
+          "lower": 0.55,
+          "upper": 0.8
+        }
+      },
+      "theta_i1": 0.81,
+      "theta_i0": 0.22
+    },
+    {
+      "source": "curiosity_stmt3",
+      "target": "arg_intervention",
+      "relation": "supports",
+      "strength": 0.6,
+      "bayes_factor": 1.5,
+      "weight": 0.7,
+      "metadata": {
+        "context": "Some evidence that curiosity can be developed",
+        "evidence_type": "direct",
+        "confidence_interval": {
+          "lower": 0.4,
+          "upper": 0.75
+        }
+      },
+      "theta_i1": 0.77,
+      "theta_i0": 0.26
+    },
+    {
+      "source": "curiosity_stmt3",
+      "target": "arg_cross_cultural",
+      "relation": "contradicts",
+      "strength": 0.4,
+      "bayes_factor": 0.8,
+      "weight": 0.5,
+      "metadata": {
+        "context": "Cultural variations suggest innate rather than developed trait",
+        "evidence_type": "indirect",
+        "confidence_interval": {
+          "lower": 0.3,
+          "upper": 0.6
+        }
+      },
+      "theta_i1": 0.36,
+      "theta_i0": 0.66
+    },
+    {
+      "source": "bias_novelty",
+      "target": "curiosity_stmt2",
+      "relation": "contradicts",
+      "strength": 0.6,
+      "bayes_factor": 0.7,
+      "weight": 0.4,
+      "metadata": {
+        "context": "Novelty bias may masquerade as genuine curiosity",
+        "evidence_type": "theoretical"
+      },
+      "theta_i1": 0.29,
+      "theta_i0": 0.74
+    },
+    {
+      "source": "bias_confirmation_curiosity",
+      "target": "curiosity_stmt1",
+      "relation": "influences",
+      "strength": 0.5,
+      "bayes_factor": 1.0,
+      "weight": 0.3,
+      "metadata": {
+        "context": "Pseudo-curiosity may provide less effective learning",
+        "evidence_type": "theoretical"
+      },
+      "theta_i1": 0.68,
+      "theta_i0": 0.38
+    },
+    {
+      "source": "curiosity_stmt1",
+      "target": "curiosity_stmt2",
+      "relation": "influences",
+      "strength": 0.7,
+      "bayes_factor": 2.3,
+      "weight": 0.6,
+      "metadata": {
+        "context": "General curiosity-learning link supports intrinsic motivation value",
+        "evidence_type": "theoretical"
+      },
+      "theta_i1": 0.73,
+      "theta_i0": 0.35
+    },
+    {
+      "source": "curiosity_stmt2",
+      "target": "curiosity_stmt3",
+      "relation": "influences",
+      "strength": 0.6,
+      "bayes_factor": 1.5,
+      "weight": 0.5,
+      "metadata": {
+        "context": "If intrinsic curiosity is valuable, developing it becomes important",
+        "evidence_type": "theoretical"
+      },
+      "theta_i1": 0.7,
+      "theta_i0": 0.36
+    }
+  ],
+  "metadata": {
+    "title": "Curiosity and Learning Bayesian Model",
+    "description": "Bayesian analysis of curiosity's role in learning, including cognitive biases that may interfere",
+    "id_author": "curiosity_researcher",
+    "name_author": "Curiosity & Learning Research Group",
+    "date_time": "2024-01-15T16:45:00Z",
+    "source": "Curiosity Research Project - Experimental CSO",
+    "expert": "Claude-3.5-Sonnet",
+    "created_at": "2024-01-15T16:45:00Z",
+    "updated_at": "2024-01-15T16:45:00Z",
+    "version": "2.0.0",
+    "bayesian_model_info": {
+      "prior_distribution": "research_based",
+      "convergence_threshold": 0.002,
+      "max_iterations": 60
+    }
+  }
+}

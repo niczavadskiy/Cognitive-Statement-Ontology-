@@ -1,0 +1,267 @@
+{
+  "nodes": [
+    {
+      "id": "trust_stmt1",
+      "type": "statement",
+      "text": "Trust is essential for effective team collaboration",
+      "credibility": "green",
+      "prior_probability": 0.85,
+      "metadata": {
+        "tags": [
+          "trust",
+          "collaboration",
+          "teams"
+        ],
+        "confidence": 0.9,
+        "evidence_strength": "strong"
+      }
+    },
+    {
+      "id": "trust_stmt2",
+      "type": "statement",
+      "text": "Lack of trust increases transaction costs in organizations",
+      "credibility": "yellow",
+      "prior_probability": 0.7,
+      "metadata": {
+        "tags": [
+          "trust",
+          "economics",
+          "organizations"
+        ],
+        "confidence": 0.75,
+        "evidence_strength": "moderate"
+      }
+    },
+    {
+      "id": "trust_stmt3",
+      "type": "statement",
+      "text": "Trust can be rebuilt after being damaged",
+      "credibility": "yellow",
+      "prior_probability": 0.6,
+      "metadata": {
+        "tags": [
+          "trust",
+          "recovery",
+          "relationships"
+        ],
+        "confidence": 0.6,
+        "evidence_strength": "moderate"
+      }
+    },
+    {
+      "id": "arg_empirical",
+      "type": "argument",
+      "text": "Longitudinal study of 200 teams over 2 years",
+      "prior_probability": 0.9,
+      "posterior_probability": 0.92,
+      "metadata": {
+        "tags": [
+          "empirical",
+          "longitudinal",
+          "teams"
+        ],
+        "confidence": 0.95,
+        "evidence_strength": "very_strong"
+      }
+    },
+    {
+      "id": "arg_economic",
+      "type": "argument",
+      "text": "Economic analysis of organizational transaction costs",
+      "prior_probability": 0.75,
+      "posterior_probability": 0.78,
+      "metadata": {
+        "tags": [
+          "economic",
+          "analysis",
+          "costs"
+        ],
+        "confidence": 0.8,
+        "evidence_strength": "strong"
+      }
+    },
+    {
+      "id": "arg_intervention",
+      "type": "argument",
+      "text": "Trust-building intervention studies",
+      "prior_probability": 0.65,
+      "posterior_probability": 0.72,
+      "metadata": {
+        "tags": [
+          "intervention",
+          "trust_building"
+        ],
+        "confidence": 0.7,
+        "evidence_strength": "moderate"
+      }
+    },
+    {
+      "id": "arg_anecdotal",
+      "type": "argument",
+      "text": "Anecdotal evidence from team leaders",
+      "prior_probability": 0.5,
+      "posterior_probability": 0.55,
+      "metadata": {
+        "tags": [
+          "anecdotal",
+          "leadership"
+        ],
+        "confidence": 0.4,
+        "evidence_strength": "weak"
+      }
+    },
+    {
+      "id": "competing_arg",
+      "type": "argument",
+      "text": "Some teams function well with minimal trust through strict processes",
+      "prior_probability": 0.4,
+      "posterior_probability": 0.35,
+      "metadata": {
+        "tags": [
+          "competing",
+          "processes",
+          "alternative"
+        ],
+        "confidence": 0.5,
+        "evidence_strength": "weak"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "trust_stmt1",
+      "target": "arg_empirical",
+      "relation": "supports",
+      "strength": 0.9,
+      "bayes_factor": 8.1,
+      "weight": 0.95,
+      "metadata": {
+        "context": "Strong empirical evidence for trust-collaboration link",
+        "evidence_type": "direct",
+        "confidence_interval": {
+          "lower": 0.85,
+          "upper": 0.95
+        }
+      },
+      "theta_i1": 0.91,
+      "theta_i0": 0.14
+    },
+    {
+      "source": "trust_stmt2",
+      "target": "arg_economic",
+      "relation": "supports",
+      "strength": 0.75,
+      "bayes_factor": 3.0,
+      "weight": 0.8,
+      "metadata": {
+        "context": "Economic data supports trust-cost relationship",
+        "evidence_type": "statistical",
+        "confidence_interval": {
+          "lower": 0.6,
+          "upper": 0.8
+        }
+      },
+      "theta_i1": 0.84,
+      "theta_i0": 0.2
+    },
+    {
+      "source": "trust_stmt3",
+      "target": "arg_intervention",
+      "relation": "supports",
+      "strength": 0.7,
+      "bayes_factor": 2.3,
+      "weight": 0.75,
+      "metadata": {
+        "context": "Intervention studies show trust can be rebuilt",
+        "evidence_type": "direct",
+        "confidence_interval": {
+          "lower": 0.55,
+          "upper": 0.8
+        }
+      },
+      "theta_i1": 0.81,
+      "theta_i0": 0.22
+    },
+    {
+      "source": "trust_stmt1",
+      "target": "arg_anecdotal",
+      "relation": "supports",
+      "strength": 0.4,
+      "bayes_factor": 0.8,
+      "weight": 0.2,
+      "metadata": {
+        "context": "Weak anecdotal support",
+        "evidence_type": "indirect",
+        "confidence_interval": {
+          "lower": 0.2,
+          "upper": 0.6
+        }
+      },
+      "theta_i1": 0.68,
+      "theta_i0": 0.34
+    },
+    {
+      "source": "trust_stmt1",
+      "target": "competing_arg",
+      "relation": "contradicts",
+      "strength": 0.6,
+      "bayes_factor": 0.7,
+      "weight": 0.3,
+      "metadata": {
+        "context": "Some evidence against necessity of trust",
+        "evidence_type": "indirect",
+        "confidence_interval": {
+          "lower": 0.3,
+          "upper": 0.7
+        }
+      },
+      "theta_i1": 0.29,
+      "theta_i0": 0.74
+    },
+    {
+      "source": "trust_stmt1",
+      "target": "trust_stmt2",
+      "relation": "influences",
+      "strength": 0.6,
+      "bayes_factor": 1.5,
+      "weight": 0.6,
+      "metadata": {
+        "context": "Trust affects organizational efficiency",
+        "evidence_type": "theoretical"
+      },
+      "theta_i1": 0.7,
+      "theta_i0": 0.36
+    },
+    {
+      "source": "trust_stmt2",
+      "target": "trust_stmt3",
+      "relation": "influences",
+      "strength": 0.5,
+      "bayes_factor": 1.0,
+      "weight": 0.5,
+      "metadata": {
+        "context": "High cost of broken trust motivates rebuilding",
+        "evidence_type": "theoretical"
+      },
+      "theta_i1": 0.68,
+      "theta_i0": 0.38
+    }
+  ],
+  "metadata": {
+    "title": "Trust Dynamics Bayesian Model",
+    "description": "Bayesian analysis of trust in organizational and team contexts with competing evidence",
+    "id_author": "trust_researcher",
+    "name_author": "Trust Research Team",
+    "date_time": "2024-01-15T14:30:00Z",
+    "source": "Trust Research Project - Experimental CSO",
+    "expert": "Claude-3.5-Sonnet",
+    "created_at": "2024-01-15T14:30:00Z",
+    "updated_at": "2024-01-15T14:30:00Z",
+    "version": "2.0.0",
+    "bayesian_model_info": {
+      "prior_distribution": "mixed_sources",
+      "convergence_threshold": 0.005,
+      "max_iterations": 75
+    }
+  }
+}

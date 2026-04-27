@@ -1,0 +1,238 @@
+{
+  "nodes": [
+    {
+      "id": "stmt1",
+      "type": "statement",
+      "text": "People tend to seek information that confirms their existing beliefs",
+      "credibility": "green",
+      "prior_probability": 0.7,
+      "metadata": {
+        "tags": [
+          "psychology",
+          "cognitive_bias"
+        ],
+        "confidence": 0.8,
+        "evidence_strength": "strong"
+      }
+    },
+    {
+      "id": "stmt2",
+      "type": "statement",
+      "text": "Confirmation bias affects decision-making quality",
+      "credibility": "yellow",
+      "prior_probability": 0.6,
+      "metadata": {
+        "tags": [
+          "decision_making",
+          "bias_effects"
+        ],
+        "confidence": 0.7,
+        "evidence_strength": "moderate"
+      }
+    },
+    {
+      "id": "arg1",
+      "type": "argument",
+      "text": "Empirical evidence from cognitive psychology studies",
+      "prior_probability": 0.8,
+      "posterior_probability": 0.85,
+      "metadata": {
+        "tags": [
+          "empirical",
+          "psychology"
+        ],
+        "confidence": 0.9,
+        "evidence_strength": "very_strong"
+      }
+    },
+    {
+      "id": "arg2",
+      "type": "argument",
+      "text": "Meta-analysis of 25 decision-making studies",
+      "prior_probability": 0.75,
+      "posterior_probability": 0.82,
+      "metadata": {
+        "tags": [
+          "meta_analysis",
+          "decision_making"
+        ],
+        "confidence": 0.85,
+        "evidence_strength": "strong"
+      }
+    },
+    {
+      "id": "arg3",
+      "type": "argument",
+      "text": "Case studies from behavioral economics",
+      "prior_probability": 0.6,
+      "posterior_probability": 0.68,
+      "metadata": {
+        "tags": [
+          "case_study",
+          "economics"
+        ],
+        "confidence": 0.6,
+        "evidence_strength": "moderate"
+      }
+    },
+    {
+      "id": "bias1",
+      "type": "cognitive_bias",
+      "text": "Confirmation Bias",
+      "manifestation_of_ones_thought": 0,
+      "fixation_of_someones_bias": 1,
+      "metadata": {
+        "tags": [
+          "bias",
+          "confirmation"
+        ],
+        "notes": "Tendency to search for, interpret, and recall information in a way that confirms pre-existing beliefs"
+      }
+    },
+    {
+      "id": "quote1",
+      "type": "quotation",
+      "text": "Confirmation bias is pervasive in everyday reasoning and professional judgment.",
+      "metadata": {
+        "tags": [
+          "quotation",
+          "review"
+        ],
+        "source_ref": "Nickerson (1998), Review of General Psychology"
+      }
+    },
+    {
+      "id": "quest1",
+      "type": "question",
+      "text": "Which experimental paradigms best isolate confirmation bias from mere prior belief?"
+    }
+  ],
+  "edges": [
+    {
+      "source": "stmt1",
+      "target": "arg1",
+      "relation": "supports",
+      "strength": 0.8,
+      "bayes_factor": 4.0,
+      "weight": 0.9,
+      "metadata": {
+        "context": "Strong empirical support for confirmation bias existence",
+        "evidence_type": "direct",
+        "confidence_interval": {
+          "lower": 0.7,
+          "upper": 0.9
+        }
+      },
+      "theta_i1": 0.86,
+      "theta_i0": 0.18
+    },
+    {
+      "source": "stmt2",
+      "target": "arg2",
+      "relation": "supports",
+      "strength": 0.75,
+      "bayes_factor": 3.2,
+      "weight": 0.8,
+      "metadata": {
+        "context": "Meta-analysis shows bias impact on decisions",
+        "evidence_type": "statistical",
+        "confidence_interval": {
+          "lower": 0.6,
+          "upper": 0.85
+        }
+      },
+      "theta_i1": 0.84,
+      "theta_i0": 0.2
+    },
+    {
+      "source": "stmt2",
+      "target": "arg3",
+      "relation": "supports",
+      "strength": 0.6,
+      "bayes_factor": 1.8,
+      "weight": 0.4,
+      "metadata": {
+        "context": "Case studies provide contextual evidence",
+        "evidence_type": "indirect",
+        "confidence_interval": {
+          "lower": 0.4,
+          "upper": 0.7
+        }
+      },
+      "theta_i1": 0.77,
+      "theta_i0": 0.26
+    },
+    {
+      "source": "bias1",
+      "target": "stmt1",
+      "relation": "influences",
+      "strength": 0.9,
+      "bayes_factor": 9.0,
+      "weight": 0.95,
+      "metadata": {
+        "context": "Confirmation bias directly manifests as selective information seeking",
+        "evidence_type": "theoretical"
+      },
+      "theta_i1": 0.78,
+      "theta_i0": 0.32
+    },
+    {
+      "source": "stmt1",
+      "target": "stmt2",
+      "relation": "influences",
+      "strength": 0.7,
+      "bayes_factor": 2.8,
+      "weight": 0.7,
+      "metadata": {
+        "context": "Information seeking bias leads to poor decision quality",
+        "evidence_type": "theoretical"
+      },
+      "theta_i1": 0.73,
+      "theta_i0": 0.35
+    },
+    {
+      "source": "quote1",
+      "target": "stmt1",
+      "relation": "supports",
+      "strength": 0.65,
+      "bayes_factor": 2.5,
+      "weight": 0.55,
+      "metadata": {
+        "context": "Authoritative review ties quotation to the core claim",
+        "evidence_type": "secondary"
+      },
+      "theta_i1": 0.79,
+      "theta_i0": 0.24
+    },
+    {
+      "source": "stmt1",
+      "target": "quest1",
+      "relation": "asks_about",
+      "strength": 0.5,
+      "bayes_factor": 1.2,
+      "weight": 0.45,
+      "metadata": {
+        "context": "Question scopes empirical methodology for stmt1"
+      },
+      "theta_i1": 0.68,
+      "theta_i0": 0.38
+    }
+  ],
+  "metadata": {
+    "title": "Confirmation Bias Bayesian Analysis",
+    "description": "Bayesian analysis of confirmation bias and its effects on decision-making",
+    "id_author": "bayesian_cso_experiment",
+    "name_author": "CSO Bayesian Modeling Team",
+    "date_time": "2024-01-15T10:00:00Z",
+    "source": "Experimental CSO Bayesian Branch",
+    "expert": "Claude-3.5-Sonnet",
+    "created_at": "2024-01-15T10:00:00Z",
+    "updated_at": "2024-01-15T10:00:00Z",
+    "version": "2.0.0",
+    "bayesian_model_info": {
+      "prior_distribution": "expert_informed",
+      "convergence_threshold": 0.001,
+      "max_iterations": 50
+    }
+  }
+}
