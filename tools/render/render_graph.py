@@ -1,15 +1,15 @@
 """
-Cognitive Ontology Graph Visualization Tool
+Cognitive Statement Ontology (CSO) graph visualization
 
-This tool creates various visualizations of cognitive ontology data using Graphviz.
+Renders CSO JSON using Graphviz (outputs under repository `visualisations/`).
 
 Object Types and Their Relationships:
-1. Statements (Утверждения):
+1. Statements:
    - Can connect to all other types of objects
    - Can connect to other statements
    - Represented as colored rectangles based on credibility
 
-2. Cognitive Biases (Биасы):
+2. Cognitive biases:
    - Can connect to statements
    - Can connect to other biases
    - Represented as hexagons
@@ -18,11 +18,11 @@ Object Types and Their Relationships:
      * Number of direct bias-to-bias connections
      * Total sum of both types of connections
 
-3. Arguments (Аргументы):
+3. Arguments:
    - Can only connect to statements
    - Represented as purple circles
 
-4. Quotations (Цитаты):
+4. Quotations:
    - Can only connect to statements
    - Represented as text nodes
 
@@ -623,12 +623,14 @@ def adjust_canvas_size(positions: list, min_size: float = 20.0) -> float:
     return max(min_size, max(max_x, max_y) + 4)  # Add padding
 
 def create_sequential_graph(data: Dict) -> graphviz.Digraph:
-    """Create a sequential graph visualization showing statements, biases, and arguments.
+    """Create a sequential graph visualization showing statements, biases, arguments, and questions.
     
     The graph shows relationships between different types of objects:
     - Statements can connect to all other types and to other statements
     - Biases can connect to statements and other biases
-    - Arguments can only connect to statements
+    - Arguments are always target nodes (other nodes connect TO arguments, not FROM)
+    - Arguments can be sources when connecting to questions (bidirectional)
+    - Questions can connect to statements, arguments, biases, and other questions
     - Quotations can only connect to statements
     """
     dot = graphviz.Digraph('Cognitive Ontology', format='png', engine='dot')
@@ -645,7 +647,8 @@ def create_sequential_graph(data: Dict) -> graphviz.Digraph:
     dot.attr('edge', style='solid', dir='forward')
     
     # Create dictionaries for quick lookup
-    nodes = {node['id']: node for node in data['nodes'] if node['type'] != 'quotation'}  # Exclude quotations
+    # Exclude quotations (they are shown separately in context notation)
+    nodes = {node['id']: node for node in data['nodes'] if node['type'] != 'quotation'}
     edges = [edge for edge in data['edges'] 
              if edge['source'] in nodes and edge['target'] in nodes]  # Only include edges between non-quotation nodes
     
@@ -656,13 +659,15 @@ def create_sequential_graph(data: Dict) -> graphviz.Digraph:
         'red': '#d9534f',
         'gray': '#9e9e9e',
         'argument': '#b19cd9',  # Purple
-        'cognitive_bias': '#f28e8c'
+        'cognitive_bias': '#f28e8c',
+        'question': '#87ceeb'  # Sky blue
     }
     
     # Separate nodes by type
     statements = [n for n in nodes.values() if n['type'] == 'statement']
     biases = [n for n in nodes.values() if n['type'] == 'cognitive_bias']
     arguments = [n for n in nodes.values() if n['type'] == 'argument']
+    questions = [n for n in nodes.values() if n['type'] == 'question']
     
     # Layout parameters
     min_gap = 2.5  # Initial minimal gap between objects
@@ -670,8 +675,8 @@ def create_sequential_graph(data: Dict) -> graphviz.Digraph:
     y_args = -8    # Initial Y for arguments
     max_attempts = 20  # Maximum attempts to find non-overlapping position
     
-    # Place all main objects (statements + biases) in a row with random Y positions
-    main_nodes = statements + biases
+    # Place all main objects (statements + biases + questions) in a row with random Y positions
+    main_nodes = statements + biases + questions
     main_nodes.sort(key=lambda n: n['id'])  # Consistent order
     node_positions = {}
     current_x = 0
@@ -723,8 +728,8 @@ def create_sequential_graph(data: Dict) -> graphviz.Digraph:
         # Calculate dimensions and wrap text
         width, height, wrapped_text = calculate_node_dimensions(arg['text'], max_width=15)
         
-        # Find all nodes this argument connects to
-        connected = [e['target'] for e in edges if e['source'] == arg['id']]
+        # Find all nodes that connect TO this argument (arguments are always targets)
+        connected = [e['source'] for e in edges if e['target'] == arg['id']]
         if connected:
             # Calculate average X position of connected nodes
             avg_x = sum(node_positions[c]['x'] + node_positions[c]['width']/2 for c in connected if c in node_positions) / len(connected)
@@ -776,6 +781,16 @@ def create_sequential_graph(data: Dict) -> graphviz.Digraph:
                     shape='hexagon',
                     style='filled',
                     fillcolor=colors['cognitive_bias'],
+                    fontsize='60',
+                    pos=f"{pos['x']},{pos['y']}!",
+                    width=str(pos['width']),
+                    height=str(pos['height']))
+        elif node['type'] == 'question':
+            dot.node(node['id'],
+                    pos['text'],
+                    shape='diamond',
+                    style='filled',
+                    fillcolor=colors['question'],
                     fontsize='60',
                     pos=f"{pos['x']},{pos['y']}!",
                     width=str(pos['width']),
@@ -832,7 +847,8 @@ def render_graph(input_file, notation_type='hierarchical'):
         raise ValueError(f"Unknown notation type: {notation_type}")
     
     # Create visualisations directory if it doesn't exist
-    visualisations_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'visualisations')
+    repo_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    visualisations_dir = os.path.join(repo_root, 'visualisations')
     os.makedirs(visualisations_dir, exist_ok=True)
     
     # Generate output filename based on input filename and notation type

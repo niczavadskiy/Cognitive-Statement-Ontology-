@@ -15,9 +15,8 @@ import numpy as np
 
 # Add paths for imports
 script_dir = os.path.dirname(os.path.abspath(__file__))
-base_dir = os.path.dirname(script_dir)
-project_root = os.path.dirname(base_dir)
-bayesian_tools_path = os.path.join(project_root, 'ontology', 'Bayesian_modeling', 'bayesian_tools')
+project_root = os.path.dirname(os.path.dirname(script_dir))
+bayesian_tools_path = os.path.join(project_root, 'tools', 'bayesian')
 sys.path.append(bayesian_tools_path)
 
 from argument_probability_calculator import ArgumentProbabilityCalculator

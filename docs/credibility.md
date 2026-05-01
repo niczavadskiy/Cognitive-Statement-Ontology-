@@ -17,9 +17,9 @@ Color-coded assessment of statements is primarily used in the sequential notatio
 
 For quantitative analysis, CSO can additionally use:
 
-- `prior_probability` — initial confidence before graph evidence aggregation
-- `bayes_factor` and `weight` on edges — evidence strength and influence
-- `posterior_probability` — updated confidence after inference
+- `prior_probability` — initial confidence before aggregation
+- On edges: **`theta_i1` / `theta_i0`** (required by the Bayesian schema) plus, in typical pipelines, **`bayes_factor`** and **`weight`** for analyst-informed updates
+- `posterior_probability` — updated confidence after **Bayesian-style** propagation in `tools/bayesian/`
 
 This allows comparing expert judgment (categorical labels) with model-updated belief (posterior values).
 
@@ -28,7 +28,7 @@ This allows comparing expert judgment (categorical labels) with model-updated be
 Use both layers together:
 
 1. Assign categorical credibility for interpretability.
-2. Run Bayesian inference for quantitative updates.
+2. Run Bayesian-style scoring / updates in `tools/bayesian/` for quantitative results.
 3. Compare disagreements (for example, `green` but low posterior) as review triggers.
 4. Optionally apply debiasing and re-evaluate posterior stability.
 

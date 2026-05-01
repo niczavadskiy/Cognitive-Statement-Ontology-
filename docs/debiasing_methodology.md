@@ -21,7 +21,7 @@ For multiple biases:
 1. Detect bias nodes and related statement or argument nodes.
 2. Aggregate bias impact per affected node.
 3. Correct edge Bayes factors.
-4. Recompute posterior probabilities.
+4. Recompute posterior probabilities (e.g. via `tools/debiasing/cso_debiasing_tool.py` and follow-up scoring in `tools/bayesian/` as needed).
 5. Compare baseline vs debiased outcomes.
 
 ## Output requirements

@@ -224,7 +224,7 @@
     "id_author": "bayesian_cso_experiment",
     "name_author": "CSO Bayesian Modeling Team",
     "date_time": "2024-01-15T10:00:00Z",
-    "source": "Experimental CSO Bayesian Branch",
+    "source": "CSO Bayesian extension",
     "expert": "Claude-3.5-Sonnet",
     "created_at": "2024-01-15T10:00:00Z",
     "updated_at": "2024-01-15T10:00:00Z",

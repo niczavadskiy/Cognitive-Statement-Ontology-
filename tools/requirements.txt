@@ -1,1 +1,9 @@
-graphviz>=0.20.1 
+# Install from repository root: pip install -r tools/requirements.txt
+# Graph rendering (tools/render)
+graphviz>=0.20.1
+lxml>=4.9.0
+python-docx>=0.8.11
+pywin32>=305
+# Validation & Bayesian utilities (tools/bayesian)
+jsonschema>=4.0.0
+numpy>=1.24.0

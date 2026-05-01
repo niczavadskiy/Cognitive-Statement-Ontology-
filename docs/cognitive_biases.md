@@ -14,10 +14,10 @@ Bias Codex provides:
 
 Cognitive biases are represented in all three notations of the Cognitive Statement Ontology (CSO):
 
-### Hierarchical Notation
-- Biases are displayed at the top of the graph
+### Hierarchical notation (`hierarchical` in `render_graph.py`)
+- Biases can be emphasized at the top of the layout
 - Connected to statements through directed links
-- Allows tracking the influence of biases on statements
+- Useful for tracing bias influence on statements
 
 ### Context Notation
 - Biases are represented as columns
@@ -50,20 +50,27 @@ Cognitive biases are represented in all three notations of the Cognitive Stateme
 ## New properties for cognitive_bias nodes
 
 ### manifestation_of_ones_thought
-- **Description:** 1 if the author manifests this cognitive bias; 0 if not.
+- **Description:** 1 if the author manifests this cognitive bias in their own thinking or writing; 0 if not.
 - **Applicable only to nodes of type cognitive_bias.**
 
 ### fixation_of_someones_bias
-- **Description:** 1 if the author records someone else's cognitive bias; 0 if not.
+- **Description:** 1 if the author identifies, points out, or records someone else's cognitive bias, or describes behavior involving a bias and marks it as erroneous or problematic; 0 if not.
 - **Applicable only to nodes of type cognitive_bias.**
 
 ### Possible value combinations
 Allowed value combinations for cognitive_bias nodes:
-  - manifestation_of_ones_thought = 1, fixation_of_someones_bias = 0 — the author manifests the bias but does not record it as a bias.
-    Example: Author writes "Everyone knows that women are worse drivers" (manifests stereotype) but doesn't recognize it as a cognitive bias.
-  - manifestation_of_ones_thought = 0, fixation_of_someones_bias = 1 — the author records someone else's bias but does not manifest it themselves.
-    Example: Author writes "My colleague keeps saying 'everyone knows women are worse drivers' — this is a stereotype" (notices bias in others but doesn't manifest it).
-  - manifestation_of_ones_thought = 1, fixation_of_someones_bias = 1 — the author both manifests and records the bias.
-    Example: Author writes "Everyone knows that women are worse drivers... wait, that's a stereotype I'm reproducing right now" (manifests bias AND recognizes it).
-  - manifestation_of_ones_thought = 0, fixation_of_someones_bias = 0 — the author describes behavior that may involve cognitive bias but does not manifest it themselves and does not explicitly identify it as a bias.
-    Example: Author writes "Kornilova and her husband continue to communicate and forgive each other despite the crime and sentence" (describes behavior that may involve Sunk Cost Fallacy but doesn't manifest or analyze it as bias).
+- **manifestation_of_ones_thought = 1, fixation_of_someones_bias = 0** — The author manifests this cognitive bias in their own thinking or writing.
+  - Example: Author writes "Everyone knows that women are worse drivers" (the author themselves expresses this stereotype).
+- **manifestation_of_ones_thought = 0, fixation_of_someones_bias = 1** — The author identifies or points out someone else's cognitive bias, or describes behavior involving a bias and marks it as erroneous or problematic. **For this situation, it is characteristic that the author must necessarily indicate in their statement that this is an error.**
+  - Example: Author writes "My colleague keeps saying 'everyone knows women are worse drivers' — this is a stereotype" (the author identifies the bias in another's statement).
+  - Example: Author writes "This argument is flawed because it relies on confirmation bias" (the author points out the bias in reasoning).
+- **manifestation_of_ones_thought = 1, fixation_of_someones_bias = 1** — The author both manifests the bias and recognizes it as problematic.
+  - Example: Author writes "Everyone knows that women are worse drivers... wait, that's a stereotype I'm reproducing right now" (the author manifests the bias and also recognizes it as problematic).
+- **manifestation_of_ones_thought = 0, fixation_of_someones_bias = 0** — The author describes behavior that may involve a cognitive bias but does not manifest it themselves and does not explicitly identify it as a bias.
+  - Example: Author writes "Kornilova and her husband continue to communicate and forgive each other despite the crime and sentence" (describes behavior that may involve Sunk Cost Fallacy but does not manifest or analyze it as a bias).
+
+**Key points for experts:**
+- `fixation_of_someones_bias = 1` means the author critically evaluates the bias, points out its erroneous nature, or marks it as problematic. **The author must explicitly indicate that this is an error or problematic behavior.**
+- `manifestation_of_ones_thought = 1` means the author themselves uses or demonstrates this bias in their own thinking or writing.
+- If the author simply describes the bias neutrally, use `fixation_of_someones_bias = 0`.
+- If the author criticizes the bias or explicitly marks it as erroneous, use `fixation_of_someones_bias = 1`.

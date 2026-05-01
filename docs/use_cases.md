@@ -76,4 +76,4 @@
 
 ## Example
 
-See file `examples/mini_example_2.json` and visualizations created with `tools/render_graph.py`. 
+See `ontology/examples/mini_example_2.json` and render PNGs with `python tools/render/render_graph.py ontology/examples/mini_example_2.json context` (or `bias` / `sequential`). 

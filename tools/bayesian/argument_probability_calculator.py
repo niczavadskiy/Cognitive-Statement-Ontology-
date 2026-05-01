@@ -17,8 +17,8 @@ class ArgumentProbabilityCalculator:
     """
     
     def __init__(self):
-        self.used_chains_log = set()  # Журнал использованных цепочек
-        self.calculation_log = []     # Детальный лог расчетов
+        self.used_chains_log = set()  # Log of chains already consumed
+        self.calculation_log = []     # Detailed calculation log
         self.logger = logging.getLogger(__name__)
         logging.basicConfig(level=logging.INFO)
     
@@ -35,60 +35,59 @@ class ArgumentProbabilityCalculator:
         """
         self.logger.info("Starting calculation of argument probabilities using odds multiplication")
         
-        # Создаем копии для модификации
+        # Deep-enough copies for local mutation
         updated_nodes = [node.copy() for node in nodes]
         updated_edges = [edge.copy() for edge in edges]
         
-        # Получаем все утверждения и аргументы
+        # Collect statements and arguments
         statements = [node for node in updated_nodes if node['type'] == 'statement']
         arguments = [node for node in updated_nodes if node['type'] == 'argument']
         
         self.logger.info(f"Found {len(statements)} statements and {len(arguments)} arguments")
         
-        # Сбрасываем использованные цепочки для нового расчета
+        # Reset used-chain registry for a fresh run
         self.used_chains_log.clear()
         
-        # Обрабатываем каждый аргумент
+        # Process each argument node
         for argument in arguments:
             self.logger.info(f"Processing argument: {argument['id']}")
             
-            # Вычисляем апостериорную вероятность и VFE для аргумента
+            # Posterior and VFE for this argument
             posterior_prob, vfe_metrics = self._calculate_argument_posterior(
                 argument, statements, updated_nodes, updated_edges
             )
             
-            # Подсчитываем количество рёбер S→A для этого аргумента
+            # Count statement→argument edges for this argument
             edges_count = self._count_S_to_A_edges(argument['id'], updated_edges, updated_nodes)
             
-            # Вычисляем F̄_k и вклад в predictability
-            # ИСПРАВЛЕНО: используем полный VFE (variational_free_energy) вместо только accuracy_part
+            # F̄_k and predictability contribution (use full VFE, not accuracy_part alone)
             F_k_vfe = vfe_metrics.get('variational_free_energy', 0.0)
             F_bar_k = F_k_vfe / (1 + edges_count) if (1 + edges_count) > 0 else F_k_vfe
             predictability_contribution = np.exp(-F_bar_k)
             
-            # Добавляем дополнительные метрики в vfe
+            # Attach derived fields on the vfe dict
             vfe_metrics['F_bar_k'] = float(F_bar_k)
             vfe_metrics['edges_count'] = edges_count
             vfe_metrics['predictability_contribution'] = float(predictability_contribution)
             
-            # Обновляем узел аргумента
+            # Write back onto the argument node
             argument['posterior_probability'] = posterior_prob
-            argument['vfe'] = vfe_metrics  # Добавляем VFE метрики
+            argument['vfe'] = vfe_metrics  # Attach VFE metrics
             
             self.logger.info(f"Argument {argument['id']}: prior={argument.get('prior_probability', 0.5):.3f}, "
                            f"posterior={posterior_prob:.3f}, VFE={vfe_metrics['variational_free_energy']:.4f}, "
                            f"F̄_k={F_bar_k:.4f}, edges={edges_count}")
         
-        # Вычисляем и добавляем Bayes Factor для всех связей
+        # Fill missing Bayes factors on edges (heuristic; analyst override preferred)
         self._calculate_and_add_bayes_factors(updated_nodes, updated_edges)
         
-        # Вычисляем Total Predictability для всей системы
+        # Graph-level Total Predictability
         self.total_predictability = self.calculate_total_predictability(updated_nodes, updated_edges)
         
         self.logger.info(f"Total Predictability: {self.total_predictability['total_predictability']:.4f} "
                         f"(from {self.total_predictability['arguments_count']} arguments)")
         
-        # Сохраняем лог расчетов
+        # Persist calculation log
         self._save_calculation_log()
         
         return updated_nodes, updated_edges
@@ -110,14 +109,14 @@ class ArgumentProbabilityCalculator:
         argument_id = argument['id']
         prior_prob = argument.get('prior_probability', 0.5)
         
-        # Найти все цепочки от утверждений к этому аргументу
+        # All statement→argument chains for this argument
         all_chains = []
         
         for statement in statements:
             statement_id = statement['id']
             chains = self._find_all_chains(statement_id, argument_id, all_nodes, all_edges)
             
-            # Выбираем оптимальную цепочку для каждой пары (statement, argument)
+            # Pick one chain per (statement, argument) pair
             optimal_chain = self._select_optimal_chain(chains, statement_id, argument_id)
             
             if optimal_chain:
@@ -134,17 +133,16 @@ class ArgumentProbabilityCalculator:
             )
             return prior_prob, vfe_metrics
         
-        # ИСПРАВЛЕНО: Используем правильный байесовский вывод вместо перемножения шансов
-        # Вычисляем вероятность для каждой цепочки отдельно
+        # Per-chain probability, then combine (not raw odds multiply)
         chain_probabilities = []
         chain_details = []
         
         for i, chain in enumerate(all_chains):
-            # Вычисляем финальную вероятность для этой цепочки
+            # End-to-end probability along this chain
             chain_prob = self._calculate_chain_probability(chain, all_nodes, all_edges)
             chain_probabilities.append(chain_prob)
             
-            # Конвертируем в шансы для логирования
+            # Odds for logging
             odds = chain_prob / (1 - chain_prob) if chain_prob < 1.0 else float('inf')
             
             chain_info = {
@@ -156,35 +154,33 @@ class ArgumentProbabilityCalculator:
             
             self.logger.info(f"  Chain {i+1}: {chain_info['chain']} (length: {chain_info['length']}, prob: {chain_prob:.4f}, odds: {odds:.4f})")
         
-        # ПРАВИЛЬНЫЙ БАЙЕСОВСКИЙ ВЫВОД: Объединяем независимые свидетельства
-        # Используем формулу для независимых свидетельств: P = 1 - ∏(1 - P_i)
+        # Combine chains as independent support: P = 1 - ∏(1 - P_i)
         if chain_probabilities:
-            # Для независимых свидетельств: P_total = 1 - ∏(1 - P_i)
-            # Это правильный способ объединения независимых источников поддержки
+            # Noisy-OR style combination of independent supports
             combined_prob = 1.0
             for prob in chain_probabilities:
                 combined_prob *= (1.0 - prob)
             posterior_prob = 1.0 - combined_prob
             
-            # Логируем правильный расчет
+            # Log combined draw
             total_odds = posterior_prob / (1 - posterior_prob) if posterior_prob < 1.0 else float('inf')
             self.logger.info(f"  Correct Bayesian combination: P = {posterior_prob:.4f}, odds = {total_odds:.4f}")
         else:
             posterior_prob = prior_prob
         
-        # Ограничиваем значения [0, 1]
+        # Clamp to [0, 1]
         posterior_prob = max(0.0, min(1.0, posterior_prob))
         
         self.logger.info(f"  Final posterior probability: {posterior_prob:.4f}")
         
-        # Вычисляем VFE метрики
+        # VFE metrics
         vfe_metrics = self.calculate_variational_free_energy(
             chain_probabilities=chain_probabilities,
             prior_prob=prior_prob,
             posterior_prob=posterior_prob
         )
         
-        # Логируем расчет (включая VFE)
+        # Log run including VFE
         self._log_argument_calculation(argument_id, all_chains, chain_probabilities, posterior_prob, chain_details, vfe_metrics)
         
         return posterior_prob, vfe_metrics
@@ -203,23 +199,23 @@ class ArgumentProbabilityCalculator:
         Returns:
             List of chains (each chain is a list of node IDs)
         """
-        # Создаем граф для поиска путей
+        # Build adjacency for path search
         graph = defaultdict(list)
         for edge in all_edges:
             graph[edge['source']].append(edge['target'])
         
-        # Создаем lookup для узлов
+        # Node lookup
         node_lookup = {node['id']: node for node in all_nodes}
         
-        # Используем BFS для поиска всех путей
+        # BFS enumerate paths
         all_chains = []
         queue = deque([(source_id, [source_id])])
-        max_depth = 5  # Ограничиваем глубину поиска
+        max_depth = 5  # Cap search depth
         
         while queue:
             current_id, current_chain = queue.popleft()
             
-            # Проверяем глубину
+            # Depth guard
             if len(current_chain) > max_depth:
                 continue
             
@@ -227,9 +223,9 @@ class ArgumentProbabilityCalculator:
                 all_chains.append(current_chain)
                 continue
             
-            # Расширяем поиск
+            # Expand frontier
             for next_id in graph[current_id]:
-                if next_id not in current_chain:  # Избегаем циклов
+                if next_id not in current_chain:  # No cycles in path
                     new_chain = current_chain + [next_id]
                     queue.append((next_id, new_chain))
         
@@ -253,16 +249,16 @@ class ArgumentProbabilityCalculator:
         if not chains:
             return None
         
-        # Фильтруем уже использованные цепочки и их подмножества
+        # Drop chains already used or subsumed
         available_chains = []
         for chain in chains:
             chain_tuple = tuple(chain)
             
-            # Проверяем, не была ли цепочка уже использована
+            # Skip if chain already logged
             if chain_tuple in self.used_chains_log:
                 continue
             
-            # Проверяем, не является ли подмножеством уже использованной
+            # Skip if subset of a used chain
             is_subset = False
             for used_chain in self.used_chains_log:
                 if self._is_subset(chain, list(used_chain)):
@@ -275,12 +271,12 @@ class ArgumentProbabilityCalculator:
         if not available_chains:
             return None
         
-        # Сортируем по длине (по убыванию) и затем по первому ID
+        # Prefer longer chains, then lexicographic tie-break
         available_chains.sort(key=lambda x: (-len(x), x[0]))
         
         selected_chain = available_chains[0]
         
-        # Отмечаем цепочку как использованную
+        # Mark chain as consumed
         self.used_chains_log.add(tuple(selected_chain))
         
         return selected_chain
@@ -299,7 +295,7 @@ class ArgumentProbabilityCalculator:
         if len(chain) >= len(used_chain):
             return False
         
-        # Проверяем, содержится ли chain как подпоследовательность в used_chain
+        # True if chain is a contiguous subsequence of used_chain
         for i in range(len(used_chain) - len(chain) + 1):
             if used_chain[i:i+len(chain)] == chain:
                 return True
@@ -322,33 +318,33 @@ class ArgumentProbabilityCalculator:
         if len(chain) < 2:
             return 0.5  # Neutral probability
         
-        # Создаем lookup для узлов
+        # Node lookup
         node_lookup = {node['id']: node for node in all_nodes}
         
-        # Начинаем с первого узла в цепочке
+        # Start from chain head prior
         current_prob = node_lookup[chain[0]].get('prior_probability', 0.5)
         
-        # Проходим по цепочке, обновляя вероятность
+        # Walk the chain updating probability
         for i in range(1, len(chain)):
             current_node_id = chain[i]
             previous_node_id = chain[i-1]
             
-            # Находим связь между предыдущим и текущим узлом
+            # Edge from previous to current
             edge = self._find_edge(previous_node_id, current_node_id, all_edges)
             if not edge:
                 continue
             
-            # Пропускаем когнитивные искажения, контекст и вопросы в промежуточных расчетах
+            # Skip bias / quotation / question hops except final hop
             current_node = node_lookup.get(current_node_id)
             if current_node and current_node['type'] in ['cognitive_bias', 'quotation', 'question'] and i < len(chain) - 1:
                 continue
             
-            # Вычисляем новую вероятность с использованием Bayes Factor
+            # One-step BF update
             current_prob = self._update_probability_with_edge(
                 current_prob, edge, current_node
             )
         
-        return max(0.001, min(0.999, current_prob))  # Ограничиваем диапазон
+        return max(0.001, min(0.999, current_prob))  # Clamp
 
     def _calculate_chain_odds(self, chain: List[str], 
                              all_nodes: List[Dict], all_edges: List[Dict]) -> float:
@@ -366,36 +362,36 @@ class ArgumentProbabilityCalculator:
         if len(chain) < 2:
             return 1.0  # Neutral odds
         
-        # Создаем lookup для узлов
+        # Node lookup
         node_lookup = {node['id']: node for node in all_nodes}
         
-        # Начинаем с первого узла в цепочке
+        # Start from chain head prior
         current_prob = node_lookup[chain[0]].get('prior_probability', 0.5)
         
-        # Проходим по цепочке, обновляя вероятность
+        # Walk the chain updating probability
         for i in range(1, len(chain)):
             current_node_id = chain[i]
             previous_node_id = chain[i-1]
             
-            # Находим связь между предыдущим и текущим узлом
+            # Edge from previous to current
             edge = self._find_edge(previous_node_id, current_node_id, all_edges)
             if not edge:
                 continue
             
-            # Пропускаем когнитивные искажения, контекст и вопросы в промежуточных расчетах
+            # Skip bias / quotation / question hops except final hop
             current_node = node_lookup.get(current_node_id)
             if current_node and current_node['type'] in ['cognitive_bias', 'quotation', 'question'] and i < len(chain) - 1:
                 continue
             
-            # Вычисляем новую вероятность с использованием Bayes Factor
+            # One-step BF update
             current_prob = self._update_probability_with_edge(
                 current_prob, edge, current_node
             )
         
-        # Конвертируем финальную вероятность в шансы
+        # Probability to odds
         odds = current_prob / (1 - current_prob) if current_prob < 1.0 else float('inf')
         
-        return max(0.001, odds)  # Минимальный шанс для избежания нулей
+        return max(0.001, odds)  # Floor odds to avoid zero
     
     def _find_edge(self, source_id: str, target_id: str, all_edges: List[Dict]) -> Optional[Dict]:
         """
@@ -426,30 +422,30 @@ class ArgumentProbabilityCalculator:
         Returns:
             Updated probability
         """
-        # Получаем Bayes Factor из связи или вычисляем его
+        # BF from edge or heuristic from relation/strength
         bayes_factor = edge.get('bayes_factor')
         
         if bayes_factor is None:
-            # Вычисляем BF на основе типа связи и силы
+            # Heuristic BF from relation and strength
             relation = edge.get('relation', 'influences')
             strength = edge.get('strength', 0.5)
             weight = edge.get('weight', 1.0)
             
             if relation == 'supports':
-                # Поддерживающая связь: BF > 1
+                # supports: BF > 1
                 bayes_factor = 1.0 + strength * weight * 2.0
             elif relation == 'contradicts':
-                # Противоречащая связь: BF < 1
+                # contradicts: BF < 1
                 bayes_factor = 1.0 - strength * weight * 0.8
-                bayes_factor = max(0.1, bayes_factor)  # Минимальный BF
+                bayes_factor = max(0.1, bayes_factor)  # BF floor
             else:
-                # Нейтральная связь
+                # default edge
                 bayes_factor = 1.0
         
-        # Применяем байесовскую формулу
+        # Bayes update step
         posterior_prob = (prior_prob * bayes_factor) / (prior_prob * bayes_factor + (1 - prior_prob))
         
-        return max(0.001, min(0.999, posterior_prob))  # Ограничиваем диапазон
+        return max(0.001, min(0.999, posterior_prob))  # Clamp
     
     def calculate_variational_free_energy(
         self,
@@ -530,13 +526,13 @@ class ArgumentProbabilityCalculator:
         """
         self.logger.info("Calculating Bayes Factors for edges...")
         
-        # Создаем lookup для узлов
+        # Node lookup
         node_lookup = {node['id']: node for node in nodes}
         
         bayes_factors_added = 0
         
         for edge in edges:
-            # Пропускаем связи, у которых уже есть bayes_factor
+            # Keep analyst-provided BF
             if 'bayes_factor' in edge and edge['bayes_factor'] is not None:
                 continue
             
@@ -546,19 +542,19 @@ class ArgumentProbabilityCalculator:
             strength = edge.get('strength', 0.5)
             weight = edge.get('weight', 1.0)
             
-            # Получаем узлы
+            # Resolve endpoints
             source_node = node_lookup.get(source_id)
             target_node = node_lookup.get(target_id)
             
             if not source_node or not target_node:
                 continue
             
-            # Вычисляем Bayes Factor
+            # Synthesize BF
             bayes_factor = self._calculate_bayes_factor_for_edge(
                 source_node, target_node, relation, strength, weight
             )
             
-            # Добавляем в связь
+            # Write onto edge
             edge['bayes_factor'] = bayes_factor
             bayes_factors_added += 1
             
@@ -584,37 +580,36 @@ class ArgumentProbabilityCalculator:
         Returns:
             Calculated Bayes Factor
         """
-        # Получаем вероятность источника
+        # Source node probability
         source_prob = source_node.get('posterior_probability') or source_node.get('prior_probability', 0.5)
         
-        # Базовый Bayes Factor в зависимости от типа связи
+        # Relation-dependent BF scaffold
         if relation == 'supports':
-            # Поддерживающая связь: BF зависит от силы источника
-            # Сильный источник (высокая вероятность) → высокий BF
-            base_bf = 1.0 + (source_prob * strength * weight * 8.0)  # Макс BF ≈ 9
+            # supports: high source credence → higher BF
+            base_bf = 1.0 + (source_prob * strength * weight * 8.0)  # ~max BF 9
             
         elif relation == 'contradicts':
-            # Противоречащая связь: BF < 1, сильный источник → низкий BF
-            base_bf = 1.0 - (source_prob * strength * weight * 0.9)  # Мин BF ≈ 0.1
-            base_bf = max(0.05, base_bf)  # Минимальный BF
+            # contradicts: pull BF below 1
+            base_bf = 1.0 - (source_prob * strength * weight * 0.9)  # ~min BF 0.1
+            base_bf = max(0.05, base_bf)  # BF floor
             
         elif relation == 'influences':
-            # Общее влияние: умеренный BF
+            # influences: moderate BF
             if source_prob > 0.5:
-                base_bf = 1.0 + ((source_prob - 0.5) * strength * weight * 4.0)  # Макс BF ≈ 3
+                base_bf = 1.0 + ((source_prob - 0.5) * strength * weight * 4.0)  # ~max 3
             else:
-                base_bf = 1.0 - ((0.5 - source_prob) * strength * weight * 0.6)  # Мин BF ≈ 0.4
+                base_bf = 1.0 - ((0.5 - source_prob) * strength * weight * 0.6)  # ~min 0.4
                 base_bf = max(0.2, base_bf)
                 
         elif relation == 'related_to':
-            # Связанность: слабое влияние
-            base_bf = 1.0 + ((source_prob - 0.5) * strength * weight * 2.0)  # Макс BF ≈ 2
+            # related_to: weak tilt
+            base_bf = 1.0 + ((source_prob - 0.5) * strength * weight * 2.0)  # ~max 2
             
         else:
-            # Нейтральная связь
+            # fallback
             base_bf = 1.0
-        
-        # Ограничиваем диапазон
+            
+        # Clamp BF
         return max(0.05, min(20.0, base_bf))
     
     def _count_S_to_A_edges(self, argument_id: str, all_edges: List[Dict], 
@@ -675,16 +670,16 @@ class ArgumentProbabilityCalculator:
             arg_id = arg['id']
             vfe_metrics = arg['vfe']
             
-            # F_k^VFE = variational_free_energy (полный VFE = accuracy_part + kl_divergence)
+            # F_k^VFE = variational_free_energy (accuracy_part + kl_divergence)
             F_k_vfe = vfe_metrics.get('variational_free_energy', 0.0)
             
-            # |E_k| = количество рёбер S→A
+            # |E_k| = count of S→A edges
             E_k_count = self._count_S_to_A_edges(arg_id, edges, nodes)
             
             # F̄_k = F_k^VFE / (1 + |E_k|)
             F_bar_k = F_k_vfe / (1 + E_k_count) if (1 + E_k_count) > 0 else F_k_vfe
             
-            # Вклад в P_tot: e^(-F̄_k)
+            # Contribution exp(-F̄_k) toward P_tot
             contribution = np.exp(-F_bar_k)
             P_tot += contribution
             
@@ -696,7 +691,7 @@ class ArgumentProbabilityCalculator:
                 'contribution': float(contribution)
             })
         
-        # Сортировка по вкладу (убывание)
+        # Sort by contribution descending
         contributions.sort(key=lambda x: x['contribution'], reverse=True)
         
         return {
@@ -722,7 +717,7 @@ class ArgumentProbabilityCalculator:
             vfe_metrics: VFE metrics dictionary (optional)
             edges_count: Number of S→A edges (optional)
         """
-        # Конвертируем вероятности в шансы для логирования
+        # Probabilities to odds for logging
         individual_odds = [prob / (1 - prob) if prob < 1.0 else float('inf') for prob in chain_probabilities]
         total_odds = posterior_prob / (1 - posterior_prob) if posterior_prob < 1.0 else float('inf')
         
@@ -736,10 +731,10 @@ class ArgumentProbabilityCalculator:
             'posterior_probability': posterior_prob,
             'chains_count': len(chains),
             'calculation_method': 'bayesian_inference',
-            'vfe_metrics': vfe_metrics  # Добавляем VFE метрики в лог
+            'vfe_metrics': vfe_metrics  # VFE block in log
         }
         
-        # Добавляем информацию о Total Predictability если доступна
+        # Optional Total Predictability fields
         if vfe_metrics and edges_count is not None:
             log_entry['edges_count'] = edges_count
             if 'F_bar_k' in vfe_metrics:
@@ -781,60 +776,59 @@ class ArgumentProbabilityCalculator:
         """
         self.logger.info("Starting calculation of argument probabilities WITHOUT auto-generating Bayes Factors")
         
-        # Создаем копии для модификации
+        # Deep-enough copies for local mutation
         updated_nodes = [node.copy() for node in nodes]
         updated_edges = [edge.copy() for edge in edges]
         
-        # Получаем все утверждения и аргументы
+        # Collect statements and arguments
         statements = [node for node in updated_nodes if node['type'] == 'statement']
         arguments = [node for node in updated_nodes if node['type'] == 'argument']
         
         self.logger.info(f"Found {len(statements)} statements and {len(arguments)} arguments")
         
-        # Сбрасываем использованные цепочки для нового расчета
+        # Reset used-chain registry for a fresh run
         self.used_chains_log.clear()
         
-        # Обрабатываем каждый аргумент
+        # Process each argument node
         for argument in arguments:
             self.logger.info(f"Processing argument: {argument['id']}")
             
-            # Вычисляем апостериорную вероятность и VFE для аргумента
+            # Posterior and VFE for this argument
             posterior_prob, vfe_metrics = self._calculate_argument_posterior(
                 argument, statements, updated_nodes, updated_edges
             )
             
-            # Подсчитываем количество рёбер S→A для этого аргумента
+            # Count statement→argument edges for this argument
             edges_count = self._count_S_to_A_edges(argument['id'], updated_edges, updated_nodes)
             
-            # Вычисляем F̄_k и вклад в predictability
-            # ИСПРАВЛЕНО: используем полный VFE (variational_free_energy) вместо только accuracy_part
+            # F̄_k and predictability contribution (use full VFE, not accuracy_part alone)
             F_k_vfe = vfe_metrics.get('variational_free_energy', 0.0)
             F_bar_k = F_k_vfe / (1 + edges_count) if (1 + edges_count) > 0 else F_k_vfe
             predictability_contribution = np.exp(-F_bar_k)
             
-            # Добавляем дополнительные метрики в vfe
+            # Attach derived fields on the vfe dict
             vfe_metrics['F_bar_k'] = float(F_bar_k)
             vfe_metrics['edges_count'] = edges_count
             vfe_metrics['predictability_contribution'] = float(predictability_contribution)
             
-            # Обновляем узел аргумента
+            # Write back onto the argument node
             argument['posterior_probability'] = posterior_prob
-            argument['vfe'] = vfe_metrics  # Добавляем VFE метрики
+            argument['vfe'] = vfe_metrics  # Attach VFE metrics
             
             self.logger.info(f"Argument {argument['id']}: prior={argument.get('prior_probability', 0.5):.3f}, "
                            f"posterior={posterior_prob:.3f}, VFE={vfe_metrics['variational_free_energy']:.4f}, "
                            f"F̄_k={F_bar_k:.4f}, edges={edges_count}")
         
-        # НЕ вызываем _calculate_and_add_bayes_factors - используем только аналитические значения
+        # Do not auto-fill BFs — analyst values only
         self.logger.info("Skipping automatic Bayes Factor generation - using only analyst-provided values")
         
-        # Вычисляем Total Predictability для всей системы
+        # Graph-level Total Predictability
         self.total_predictability = self.calculate_total_predictability(updated_nodes, updated_edges)
         
         self.logger.info(f"Total Predictability: {self.total_predictability['total_predictability']:.4f} "
                         f"(from {self.total_predictability['arguments_count']} arguments)")
         
-        # Сохраняем лог расчетов
+        # Persist calculation log
         self._save_calculation_log()
         
         return updated_nodes, updated_edges
@@ -850,7 +844,7 @@ class ArgumentProbabilityCalculator:
             'calculation_log': self.calculation_log
         }
         
-        # Добавить Total Predictability если был рассчитан
+        # Attach Total Predictability if computed
         if hasattr(self, 'total_predictability'):
             summary['total_predictability'] = self.total_predictability
         

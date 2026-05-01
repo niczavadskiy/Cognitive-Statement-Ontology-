@@ -2,14 +2,15 @@
 
 ## Purpose
 
-The Bayesian layer extends CSO from structural representation to quantitative belief updating.
+The Bayesian layer extends CSO from structural representation to **quantitative, Bayesian-style belief updating and scoring** over the graph.
 
-It adds:
+It adds (see [bayesian_schema.md](bayesian_schema.md) and `schema_bayesian.json`):
 
-- prior/posterior probabilities for statements and arguments
-- edge-level evidence strength (Bayes factors)
-- influence weights
-- post-processing debiasing options
+- prior / posterior probabilities for statements and arguments
+- edge-level parameters **`theta_i1` / `theta_i0`** (required by the Bayesian schema)
+- in operational graphs and tools: **Bayes factors** and **weights** on edges (analyst-set or review strongly recommended)
+- optional **VFE** and **Total Predictability** diagnostics after running `tools/bayesian/` calculators
+- post-processing **debiasing** (`tools/debiasing/`)
 
 ## Why this layer is needed
 
@@ -37,11 +38,12 @@ This layer is intended for:
 
 - Replacing expert semantic interpretation
 - Fully automating truth determination
+- Claiming a fully specified global Bayesian network with verified independence structure for every domain
 - Guaranteeing independence of all evidence sources
 
 ## Integration principle
 
 Use a two-layer workflow:
 
-1. Build and validate the structural CSO graph.
-2. Apply Bayesian inference and optional debiasing for quantitative assessment.
+1. Build and validate the structural CSO graph (`ontology/schema.json`).
+2. Enrich with Bayesian fields, validate with `tools/bayesian/bayesian_validator.py`, then run **Bayesian-style** updates / VFE and optional debiasing (`tools/bayesian/`, `tools/debiasing/`).

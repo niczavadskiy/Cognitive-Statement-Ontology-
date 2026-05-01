@@ -1,0 +1,98 @@
+{
+  "nodes": [
+    {
+      "id": "s1",
+      "type": "statement",
+      "text": "Most people tend to confirm their beliefs.",
+      "credibility": "green"
+    },
+    {
+      "id": "s2",
+      "type": "statement",
+      "text": "People overestimate the probability of rare events.",
+      "credibility": "yellow"
+    },
+    {
+      "id": "s3",
+      "type": "statement",
+      "text": "Biases affect the perception of facts.",
+      "credibility": "green"
+    },
+    {
+      "id": "b1",
+      "type": "cognitive_bias",
+      "text": "Confirmation Bias"
+    },
+    {
+      "id": "a1",
+      "type": "argument",
+      "text": "Argument 1"
+    },
+    {
+      "id": "quest1",
+      "type": "question",
+      "text": "What evidence supports this claim?"
+    },
+    {
+      "id": "quest2",
+      "type": "question",
+      "text": "How does this relate to cognitive biases?",
+      "author": "Researcher",
+      "timestamp": "2024-01-15T10:00:00Z",
+      "metadata": {
+        "question_type": "research",
+        "tags": ["cognitive_biases", "relations"]
+      }
+    },
+    {
+      "id": "quest3",
+      "type": "question",
+      "text": "What arguments support this position?"
+    }
+  ],
+  "edges": [
+    { "source": "b1", "target": "s1", "relation": "influences" },
+    { "source": "b1", "target": "s3", "relation": "influences" },
+    { "source": "s1", "target": "a1", "relation": "supports" },
+    {
+      "source": "s3",
+      "target": "quest2",
+      "relation": "answers"
+    },
+    {
+      "source": "quest1",
+      "target": "s1",
+      "relation": "asks_about"
+    },
+    {
+      "source": "quest2",
+      "target": "s3",
+      "relation": "answered_by"
+    },
+    {
+      "source": "a1",
+      "target": "quest3",
+      "relation": "answers"
+    },
+    {
+      "source": "quest3",
+      "target": "a1",
+      "relation": "asks_about"
+    },
+    {
+      "source": "quest1",
+      "target": "quest2",
+      "relation": "responds_to"
+    }
+  ],
+  "metadata": {
+    "title": "Example with Questions",
+    "description": "Example demonstrating question node type and its relationships",
+    "id_author": "example_author",
+    "name_author": "Example Author",
+    "date_time": "2024-01-15T10:00:00Z",
+    "source": "Example creation",
+    "version": "1.0.0"
+  }
+}
+

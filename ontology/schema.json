@@ -17,7 +17,7 @@
           },
           "type": { 
             "type": "string", 
-            "enum": ["statement", "argument", "cognitive_bias", "quotation"],
+            "enum": ["statement", "argument", "cognitive_bias", "quotation", "question"],
             "description": "Type of the node"
           },
           "manifestation_of_ones_thought": {
@@ -99,7 +99,10 @@
               "responds_to",
               "quotes",
               "cites",
-              "related_to"
+              "related_to",
+              "answered_by",
+              "answers",
+              "asks_about"
             ],
             "description": "Type of relationship between nodes"
           },
@@ -158,6 +161,10 @@
         "source": {
           "type": "string",
           "description": "Source or origin of the ontology"
+        },
+        "expert": {
+          "type": "string",
+          "description": "Name of the LLM model used for processing this cognitive graph"
         },
         "created_at": {
           "type": "string",

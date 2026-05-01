@@ -113,18 +113,18 @@
             "relation": "supports"
         },
         {
-            "source": "arg1",
-            "target": "stmt1",
+            "source": "stmt1",
+            "target": "arg1",
             "relation": "supports"
         },
         {
-            "source": "arg2",
-            "target": "stmt2",
+            "source": "stmt2",
+            "target": "arg2",
             "relation": "supports"
         },
         {
-            "source": "arg3",
-            "target": "stmt3",
+            "source": "stmt3",
+            "target": "arg3",
             "relation": "supports"
         },
         {

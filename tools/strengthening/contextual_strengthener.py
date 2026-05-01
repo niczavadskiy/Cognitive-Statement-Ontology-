@@ -12,8 +12,7 @@ from typing import Dict, Any, Optional
 
 # Module path setup for imports (repo root = parent of ontology/Bayesian_modeling)
 _script_dir = os.path.dirname(os.path.abspath(__file__))
-_bayesian_modeling_dir = os.path.dirname(_script_dir)
-_repo_root = os.path.dirname(_bayesian_modeling_dir)
+_repo_root = os.path.dirname(os.path.dirname(_script_dir))
 demo_site_src = os.path.join(_repo_root, 'demo-site', 'src')
 if demo_site_src not in sys.path:
     sys.path.insert(0, demo_site_src)

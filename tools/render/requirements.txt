@@ -1,0 +1,5 @@
+graphviz>=0.20.1
+lxml>=4.9.0
+python-docx>=0.8.11
+pywin32>=305
+jsonschema>=4.0.0 
