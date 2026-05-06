@@ -2,7 +2,7 @@
 
 ## Description
 
-`cso_debiasing_tool.py` reduces the influence of **cognitive bias** nodes on argumentation in CSO (Cognitive **Statement** Ontology) JSON graphs.
+`cso_debiasing_tool.py` performs **epistemic (Bayes-factor) debiasing**: it uses links to **`cognitive_bias`** nodes (and weights) to **scale edge Bayes factors** and recompute posteriors. That is **not** the same as **structural / editorial debiasing** — rewriting statements or changing bias linkage in the graph; see [docs/cognitive_biases.md](../../docs/cognitive_biases.md) and the terminology block in [docs/debiasing_methodology.md](../../docs/debiasing_methodology.md).
 
 ## How it works
 

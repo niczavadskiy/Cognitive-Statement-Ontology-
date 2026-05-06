@@ -139,6 +139,8 @@ Go beyond yes/no: each check should produce **short notes or a mini-table** you 
 
 ### Debiasing impact
 
+Applies to **epistemic (BF) debiasing** via `tools/debiasing/` — not to **structural / editorial** changes to statements or `cognitive_bias` links alone (those need a normal re-run of the calculator on the edited graph). See [debiasing methodology](debiasing_methodology.md#terminology-two-kinds-of-debiasing).
+
 - **Check:** after `tools/debiasing/`, corrected BFs and recomputed posteriors move in a **directionally plausible** way relative to linked bias nodes and documented weights.
 - **Record:** baseline vs debiased posteriors for affected targets; note any correction that feels wrong on substance and whether the bias formalism is appropriate for that case.
 

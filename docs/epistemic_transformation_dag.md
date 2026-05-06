@@ -155,7 +155,9 @@ After the graph is DAG-ready on the paths you care about, run **`ArgumentProbabi
 
 After structural changes, **re-run** schema validation; **re-check SCC / DAG** before the next **epistemic** pass if posteriors / VFE / $`P_{\mathrm{tot}}`$ must stay interpretable.
 
-### 3.3 Debiasing (closed-form on Bayes factors)
+### 3.3 Epistemic debiasing (closed-form on Bayes factors)
+
+This subsection is **only** [epistemic (BF) debiasing](debiasing_methodology.md#terminology-two-kinds-of-debiasing): multiply edge Bayes factors, then recompute posteriors. **Structural / editorial debiasing** — revising statements and `cognitive_bias` linkage so the modeled discourse is less distorted — is separate; see [cognitive_biases.md](cognitive_biases.md). It changes the graph; calculators simply consume whatever graph you save (no extra debiasing operator beyond BF correction).
 
 From [debiasing_methodology.md](debiasing_methodology.md), implemented in [`tools/debiasing/cso_debiasing_tool.py`](../tools/debiasing/cso_debiasing_tool.py):
 
@@ -185,6 +187,6 @@ Then posteriors are recomputed using the corrected factors. Assumptions (multipl
 | SCC / automated DAG repair | Not shipped in `tools/` — external script, graph library, or manual JSON edits |
 | Posteriors, VFE, $`P_{\mathrm{tot}}`$ | `tools/bayesian/argument_probability_calculator.py`, `calculate_vfe.py` |
 | Strengthening | `tools/strengthening/*.py` |
-| Debiasing | `tools/debiasing/cso_debiasing_tool.py` |
+| Epistemic (BF) debiasing | `tools/debiasing/cso_debiasing_tool.py` |
 
 See also: [bayesian_inference_workflow.md](bayesian_inference_workflow.md), [tools/README.md](../tools/README.md).

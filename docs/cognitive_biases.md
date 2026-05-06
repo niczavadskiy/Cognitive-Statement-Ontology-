@@ -1,5 +1,11 @@
 # Working with Cognitive Biases
 
+## Debiasing vocabulary
+
+**Structural / editorial debiasing** here means: you improve the **graph as a model** — e.g. rewrite a distorted statement, or change how `cognitive_bias` nodes attach — so the represented position is no longer (or less) cognitively biased. That is normal CSO authoring; epistemic tools only see the **updated** nodes and edges.
+
+**Epistemic (Bayes-factor) debiasing** is different: a **numeric** pass that scales edge Bayes factors using bias weights and recomputes posteriors. See [Debiasing methodology](debiasing_methodology.md) and `tools/debiasing/cso_debiasing_tool.py`. It does not replace editorial work on statements; the two can be used independently or in sequence.
+
 ## Definition of Cognitive Biases
 
 If you haven't encountered the task of identifying cognitive biases before, we recommend using the collection in [Bias Codex](https://www.biascodex.com/). For description in the Cognitive Statement Ontology (CSO), any set of cognitive biases can be used at the researcher's discretion.

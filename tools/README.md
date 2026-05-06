@@ -72,6 +72,8 @@ Or run from `tools/bayesian/` with paths relative to that directory; see [`tools
 
 ## Debiasing (`tools/debiasing/`)
 
+**Epistemic (BF) debiasing** — corrects Bayes factors and recomputes posteriors. Distinct from **structural / editorial** debiasing (editing statements and `cognitive_bias` links); see [docs/debiasing_methodology.md](../docs/debiasing_methodology.md) and [docs/cognitive_biases.md](../docs/cognitive_biases.md).
+
 ```sh
 python tools/debiasing/cso_debiasing_tool.py path/to/cso.json
 python tools/debiasing/test_debiasing_example.py

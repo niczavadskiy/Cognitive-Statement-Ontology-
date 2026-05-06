@@ -107,8 +107,8 @@ visualisations/
 
 ### Cognitive bias and debiasing
 
-- [Working with Cognitive Biases](docs/cognitive_biases.md)
-- [Debiasing Methodology](docs/debiasing_methodology.md)
+- [Working with Cognitive Biases](docs/cognitive_biases.md) — bias nodes, notations, and **structural / editorial** debiasing of the graph
+- [Debiasing Methodology](docs/debiasing_methodology.md) — **epistemic (Bayes-factor)** debiasing (numeric BF correction + posterior recomputation)
 
 ### Evaluation
 
