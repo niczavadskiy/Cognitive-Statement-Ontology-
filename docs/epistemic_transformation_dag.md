@@ -2,7 +2,7 @@
 
 This document consolidates **DAG / cycle preparation** (precondition for stable inference), **what happens mathematically** on CSO’s **epistemic (Bayesian-style) layer**, and **transformation-layer** tooling (strengthening, debiasing, graph edits)—for graphs where cycles would otherwise break inference pipelines. Authoritative schema: [`ontology/schema.json`](../ontology/schema.json), [`ontology/Bayesian_modeling/schema_bayesian.json`](../ontology/Bayesian_modeling/schema_bayesian.json). Implementation reference: [`tools/bayesian/argument_probability_calculator.py`](../tools/bayesian/argument_probability_calculator.py).
 
-**Math in this file:** display formulas use `$$ … $$`, inline uses `$ … $`, so they render on **GitHub** and in editors that support math in Markdown (e.g. VS Code “Markdown Math”). If your viewer shows raw backslashes, open the file on GitHub or enable math in the preview.
+**Math in this file:** **Display** formulas use GitHub fenced blocks with language tag `math` (opening line `` ```math ``, closing line `` ``` ``). **Inline** math uses single-dollar delimiters, or GitHub’s `` $`…`$ `` form when the expression would clash with Markdown (underscores, subscripts). See [GitHub: Writing mathematical expressions](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/writing-mathematical-expressions). VS Code/Cursor preview also renders these.
 
 ---
 
@@ -29,11 +29,11 @@ Layers 2–3 are **under active development**; treat formulas below as describin
 
 Along one edge, probability is updated with a **Bayes factor** BF > 0:
 
-$$
+```math
 P_{\text{post}} = \frac{P_{\text{prior}} \cdot \text{BF}}{P_{\text{prior}} \cdot \text{BF} + (1 - P_{\text{prior}})}
-$$
+```
 
-**Plain:** $P_{\text{post}} = (P_{\text{prior}} \cdot \mathrm{BF}) / (P_{\text{prior}} \cdot \mathrm{BF} + 1 - P_{\text{prior}})$.
+**Plain:** $`P_{\text{post}} = (P_{\text{prior}} \cdot \mathrm{BF}) / (P_{\text{prior}} \cdot \mathrm{BF} + 1 - P_{\text{prior}})`$.
 
 In code, when BF is missing, a **heuristic** BF may be synthesized from `relation`, `strength`, and `weight` (e.g. `supports` / `contradicts`). For serious analyses, **set or review BF explicitly** on edges.
 
@@ -43,58 +43,76 @@ For each argument, the calculator finds paths from **statement** nodes to that a
 
 ### 2.4 Combining multiple chains (independence-style)
 
-For several chain probabilities $P_1,\ldots,P_n$ treated as **independent support**, the implementation combines them as:
+For several chain probabilities $`P_1,\ldots,P_n`$ treated as **independent support**, the implementation combines them as:
 
-$$
+```math
 P_{\text{combined}} = 1 - \prod_{i=1}^{n}(1 - P_i)
-$$
+```
 
-**Plain (noisy-OR):** combined = $1 - (1-P_1)(1-P_2)\cdots(1-P_n)$.
+**Plain (noisy-OR):** combined = $`1 - (1-P_1)(1-P_2)\cdots(1-P_n)`$.
 
 This is the “noisy-OR” style combination used in the current code (see comments in `_calculate_argument_posterior`). **Real evidence is often dependent**; document assumptions per study.
 
 ### 2.5 Variational Free Energy (per argument)
 
-The implementation defines metrics aligned with a VFE-style decomposition (see `calculate_variational_free_energy`):
+The implementation defines metrics aligned with a VFE-style decomposition (see `calculate_variational_free_energy`).
 
-- **Marginal evidence** from chain probabilities: with evidence probabilities $p_i$,
-  $$
-  m = 1 - \prod_i (1 - p_i)
-  $$
-  (clamped away from 0 for logs).
-- **Log-evidence / accuracy term:** $\text{log\_evidence} = -\ln(m)$. The code also exposes this as **`accuracy_part`** (same as `log_evidence` in the current implementation).
-- **KL divergence** between posterior $q$ and prior $p$ (Bernoulli):
-  $$
-  D_{\mathrm{KL}}(q\parallel p) = q\ln\frac{q}{p} + (1-q)\ln\frac{1-q}{1-p}
-  $$
-- **Total VFE (reported):**
-  $$
-  F_k^{\mathrm{VFE}} = \text{log\_evidence} + D_{\mathrm{KL}}(q\parallel p)
-  $$
+**Marginal evidence** — with evidence probabilities $`p_i`$:
+
+```math
+m = 1 - \prod_i (1 - p_i)
+```
+
+(clamped away from 0 for logs).
+
+**Log-evidence / accuracy term** — let $`\ell`$ denote log-evidence (same as **`accuracy_part`** / **`log_evidence`** in code):
+
+```math
+\ell = -\ln(m)
+```
+
+**KL divergence** between posterior $`q`$ and prior $`p`$ (Bernoulli):
+
+```math
+D_{\mathrm{KL}}(q\parallel p) = q\ln\frac{q}{p} + (1-q)\ln\frac{1-q}{1-p}
+```
+
+**Total VFE (reported):**
+
+```math
+F_k^{\mathrm{VFE}} = \ell + D_{\mathrm{KL}}(q\parallel p)
+```
 
 Lower VFE is treated as “better” in narrative terms; use comparisons **within** a fixed modeling setup, not as absolute truth.
 
 ### 2.6 Normalized VFE and per-argument predictability contribution
 
-Let $|E_k|$ be the number of **statement → argument** edges incident on argument $k$. The code uses:
+Let $`|E_k|`$ denote the **cardinality** (count) of **direct** edges **statement → argument $`k`$** — not “absolute value” of a number. The code uses:
 
-$$
+```math
 \bar{F}_k = \frac{F_k^{\mathrm{VFE}}}{1 + |E_k|}
-$$
+```
+
+**How $`|E_k|`$ is counted** (see `_count_S_to_A_edges` in [`tools/bayesian/argument_probability_calculator.py`](../tools/bayesian/argument_probability_calculator.py)):
+
+- Scan all edges in the CSO graph.
+- Count an edge **iff** `edge.target` is the id of argument $`k`$ **and** the `edge.source` node has `type == "statement"`.
+- **Only one-hop links** count: a path such as statement → … → intermediate nodes → argument $`k`$ does **not** increase $`|E_k|`$ unless there is also a **direct** edge from some statement to $`k`$.
+- **Relation** (`supports`, `contradicts`, etc.) is **not** used in this count — any directed edge from a statement node to argument $`k`$ is included.
 
 **Per-argument contribution** to a predictability sum:
 
-$$
+```math
 \text{contribution}_k = e^{-\bar{F}_k}
-$$
+```
 
 ### 2.7 Total Predictability (graph-level)
 
-$$
+```math
 P_{\mathrm{tot}} = \sum_k e^{-\bar{F}_k}
-$$
+```
 
-**Plain:** $P_{\mathrm{tot}} = \sum_k \exp(-\bar{F}_k)$.
+**Plain:** $`P_{\mathrm{tot}} = \sum_k \exp(-\bar{F}_k)`$.
 
 The aggregated structure is also written into graph metadata when the pipeline runs (see `schema_bayesian.json` under `metadata.total_predictability`).
 
@@ -111,7 +129,7 @@ Section 3 groups **operational tools** that edit the graph or prepare it for sco
 
 ### 3.1 DAG-oriented cycle removal (pipeline)
 
-**Why (epistemic):** Layer-2 calculators walk **directed** support paths. **Cycles** make propagation order-dependent and undermine interpretation of posteriors, VFE, and $P_{\mathrm{tot}}$. **Remove or collapse cycles before** invoking those tools on the subgraph you care about.
+**Why (epistemic):** Layer-2 calculators walk **directed** support paths. **Cycles** make propagation order-dependent and undermine interpretation of posteriors, VFE, and $`P_{\mathrm{tot}}`$. **Remove or collapse cycles before** invoking those tools on the subgraph you care about.
 
 **Cycle detection (in this repo):**
 
@@ -135,23 +153,23 @@ After the graph is DAG-ready on the paths you care about, run **`ArgumentProbabi
 - **Policy-driven argument strengthening** — [`tools/strengthening/argumentation_strengthener.py`](../tools/strengthening/argumentation_strengthener.py): LLM-guided edits / new nodes and edges under rotation of policies (no closed-form “math” — behavior is policy- and prompt-defined).
 - **Contextual strengthening** — [`tools/strengthening/contextual_strengthener.py`](../tools/strengthening/contextual_strengthener.py): merges evidence from external CSO graphs; may require `demo-site` modules when that stack is enabled.
 
-After structural changes, **re-run** schema validation; **re-check SCC / DAG** before the next **epistemic** pass if posteriors / VFE / $P_{\mathrm{tot}}$ must stay interpretable.
+After structural changes, **re-run** schema validation; **re-check SCC / DAG** before the next **epistemic** pass if posteriors / VFE / $`P_{\mathrm{tot}}`$ must stay interpretable.
 
 ### 3.3 Debiasing (closed-form on Bayes factors)
 
 From [debiasing_methodology.md](debiasing_methodology.md), implemented in [`tools/debiasing/cso_debiasing_tool.py`](../tools/debiasing/cso_debiasing_tool.py):
 
-**One bias** with weight $w$:
+**One bias** with weight $`w`$:
 
-$$
+```math
 \text{BF}' = \text{BF} \cdot (1 - w)
-$$
+```
 
-**Several biases** with weights $w_i$:
+**Several biases** with weights $`w_i`$:
 
-$$
+```math
 \text{BF}' = \text{BF} \cdot \prod_i (1 - w_i)
-$$
+```
 
 Then posteriors are recomputed using the corrected factors. Assumptions (multiplicative combination, approximate weights) must be documented per run. (Same **acyclicity** expectations apply as for any other epistemic recalculation.)
 
@@ -165,7 +183,7 @@ Then posteriors are recomputed using the corrected factors. Assumptions (multipl
 | Validate Bayesian extension | `python tools/bayesian/bayesian_validator.py <graph.json>` |
 | List directed cycles (simple) | `tools/bayesian/technical_rules.py` — `detect_cycles`; validator warnings in `bayesian_validator.py` |
 | SCC / automated DAG repair | Not shipped in `tools/` — external script, graph library, or manual JSON edits |
-| Posteriors, VFE, $P_{\mathrm{tot}}$ | `tools/bayesian/argument_probability_calculator.py`, `calculate_vfe.py` |
+| Posteriors, VFE, $`P_{\mathrm{tot}}`$ | `tools/bayesian/argument_probability_calculator.py`, `calculate_vfe.py` |
 | Strengthening | `tools/strengthening/*.py` |
 | Debiasing | `tools/debiasing/cso_debiasing_tool.py` |
 
