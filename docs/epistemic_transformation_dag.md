@@ -55,15 +55,15 @@ This is the “noisy-OR” style combination used in the current code (see comme
 
 The implementation defines metrics aligned with a VFE-style decomposition (see `calculate_variational_free_energy`).
 
-**Marginal evidence** — with evidence probabilities $`p_i`$:
+**Noisy-OR aggregate over chains** — with per-chain probabilities $`p_i`$ (from the implementation’s chain propagation, not necessarily a literal $`P(y \mid x)`$ in a fully specified joint model):
 
 ```math
 m = 1 - \prod_i (1 - p_i)
 ```
 
-(clamped away from 0 for logs).
+(clamped away from 0 for logs). **This $`m`$ is not** Bayesian **model evidence** $`P(y)`$ (marginal likelihood of an observation under $`P(y,x)`$); it is a **combiner** for parallel support channels (independence of “failure” $`(1-p_i)`$ is an assumption to document per use case).
 
-**Log-evidence / accuracy term** — let $`\ell`$ denote log-evidence (same as **`accuracy_part`** / **`log_evidence`** in code):
+**Accuracy-style term** — let $`\ell = -\ln(m)`$ (same as **`accuracy_part`** / **`log_evidence`** in code). It plays a **surprise / penalty** role analogous to terms tied to fit-to-evidence in variational bounds, but **must not** be read as $`-\ln P(y)`$ unless you build a generative model that identifies $`m`$ with $`P(y)`$.
 
 ```math
 \ell = -\ln(m)
@@ -81,7 +81,7 @@ D_{\mathrm{KL}}(q\parallel p) = q\ln\frac{q}{p} + (1-q)\ln\frac{1-q}{1-p}
 F_k^{\mathrm{VFE}} = \ell + D_{\mathrm{KL}}(q\parallel p)
 ```
 
-**Relation to active inference.** The variational free energy as an expected log-ratio functional and its decomposition into a **KL** term plus a **log-evidence / surprise**-like term are standard in active inference: Parr, Pezzulo, & Friston (2022), ch. 4 §4.2, eq. (4.2)–(4.4), and app. A, eq. (A.29) ([*Active Inference*](https://mitpress.mit.edu/9780262045353/active-inference/), MIT Press). There one writes $`F[Q,y] = D_{\mathrm{KL}}[Q(x)\,\|\,P(x\,|\,y)] - \ln P(y)`$ (divergence to the **true** posterior plus negative log model evidence). **This implementation differs:** KL is between approximate posterior $`q`$ and **prior** $`p`$ (Bernoulli), and $`\ell = -\ln m`$ uses the noisy-OR marginal $`m`$ over chain probabilities—a **tractable CSO surrogate** for an accuracy term, not $`-\ln P(y)`$ from a fully specified joint generative model.
+**Relation to active inference.** The functional $`\mathbb{E}_Q[\ln Q - \ln P(y,x)]`$ and equivalent rearrangements are standard: Parr, Pezzulo, & Friston (2022), ch. 4 §4.2, eq. (4.2)–(4.4), and app. A, eq. (A.29) ([*Active Inference*](https://mitpress.mit.edu/9780262045353/active-inference/), MIT Press). Equation (4.4) highlights one form: $`F[Q,y] = D_{\mathrm{KL}}[Q(x)\,\|\,P(x\,|\,y)] - \ln P(y)`$ (KL to the **true** posterior and **marginal likelihood** $`P(y)`$). Other equivalent ELBO-style splits use $`D_{\mathrm{KL}}[Q\,\|\,P(x)]`$ (KL to the **prior**) together with an expected log-likelihood / accuracy term—so KL between approximate posterior $`q`$ and prior $`p`$ here is **in that familiar family**, not an ad-hoc substitute for “correct” variational inference. What is specific to CSO is the **accuracy surrogate**: $`\ell = -\ln m`$ from the noisy-OR aggregate $`m`$ over chain $`p_i`$, which is **not** $`-\ln P(y)`$ unless you explicitly equate $`m`$ to model evidence in a defined generative model.
 
 Lower VFE is treated as “better” in narrative terms; use comparisons **within** a fixed modeling setup, not as absolute truth.
 
