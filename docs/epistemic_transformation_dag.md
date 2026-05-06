@@ -2,8 +2,6 @@
 
 This document consolidates **DAG / cycle preparation** (precondition for stable inference), **what happens mathematically** on CSO’s **epistemic (Bayesian-style) layer**, and **transformation-layer** tooling (strengthening, debiasing, graph edits)—for graphs where cycles would otherwise break inference pipelines. Authoritative schema: [`ontology/schema.json`](../ontology/schema.json), [`ontology/Bayesian_modeling/schema_bayesian.json`](../ontology/Bayesian_modeling/schema_bayesian.json). Implementation reference: [`tools/bayesian/argument_probability_calculator.py`](../tools/bayesian/argument_probability_calculator.py).
 
-**Math in this file:** **Display** formulas use GitHub fenced blocks with language tag `math` (opening line `` ```math ``, closing line `` ``` ``). **Inline** math uses single-dollar delimiters, or GitHub’s `` $`…`$ `` form when the expression would clash with Markdown (underscores, subscripts). See [GitHub: Writing mathematical expressions](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/writing-mathematical-expressions). VS Code/Cursor preview also renders these.
-
 ---
 
 ## 1. Three layers (reminder)
@@ -82,6 +80,8 @@ D_{\mathrm{KL}}(q\parallel p) = q\ln\frac{q}{p} + (1-q)\ln\frac{1-q}{1-p}
 ```math
 F_k^{\mathrm{VFE}} = \ell + D_{\mathrm{KL}}(q\parallel p)
 ```
+
+**Relation to active inference.** The variational free energy as an expected log-ratio functional and its decomposition into a **KL** term plus a **log-evidence / surprise**-like term are standard in active inference: Parr, Pezzulo, & Friston (2022), ch. 4 §4.2, eq. (4.2)–(4.4), and app. A, eq. (A.29) ([*Active Inference*](https://mitpress.mit.edu/9780262045353/active-inference/), MIT Press). There one writes $`F[Q,y] = D_{\mathrm{KL}}[Q(x)\,\|\,P(x\,|\,y)] - \ln P(y)`$ (divergence to the **true** posterior plus negative log model evidence). **This implementation differs:** KL is between approximate posterior $`q`$ and **prior** $`p`$ (Bernoulli), and $`\ell = -\ln m`$ uses the noisy-OR marginal $`m`$ over chain probabilities—a **tractable CSO surrogate** for an accuracy term, not $`-\ln P(y)`$ from a fully specified joint generative model.
 
 Lower VFE is treated as “better” in narrative terms; use comparisons **within** a fixed modeling setup, not as absolute truth.
 
