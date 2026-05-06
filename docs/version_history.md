@@ -88,5 +88,5 @@ The **interchange format** for the ontology core is **JSON** matching `ontology/
 ## Further reading
 
 - [definition.md](definition.md), [rules.md](rules.md), [use_cases.md](use_cases.md)
-- [epistemic_transformation_dag.md](epistemic_transformation_dag.md) — math for layers 2–3 and DAG tooling
+- [DAG preparation, epistemic layer, and transformation layer](epistemic_transformation_dag.md) — graph prep for inference; math for layers 2–3; SCC and transformation tooling
 - [bayesian_overview.md](bayesian_overview.md), [bayesian_schema.md](bayesian_schema.md), [bayesian_inference_workflow.md](bayesian_inference_workflow.md)

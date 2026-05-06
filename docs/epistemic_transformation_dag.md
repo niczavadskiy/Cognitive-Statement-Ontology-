@@ -1,6 +1,8 @@
-# Epistemic layer, transformation layer, and DAG preparation
+# DAG preparation, epistemic layer, and transformation layer
 
-This document consolidates **what happens mathematically** on CSO’s **epistemic (Bayesian-style) layer** and **transformation layer**, and **how graphs are driven toward a DAG** when cycles break inference pipelines. Authoritative schema: [`ontology/schema.json`](../ontology/schema.json), [`ontology/Bayesian_modeling/schema_bayesian.json`](../ontology/Bayesian_modeling/schema_bayesian.json). Implementation reference: [`tools/bayesian/argument_probability_calculator.py`](../tools/bayesian/argument_probability_calculator.py).
+This document consolidates **DAG / cycle preparation** (precondition for stable inference), **what happens mathematically** on CSO’s **epistemic (Bayesian-style) layer**, and **transformation-layer** tooling (strengthening, debiasing, graph edits)—for graphs where cycles would otherwise break inference pipelines. Authoritative schema: [`ontology/schema.json`](../ontology/schema.json), [`ontology/Bayesian_modeling/schema_bayesian.json`](../ontology/Bayesian_modeling/schema_bayesian.json). Implementation reference: [`tools/bayesian/argument_probability_calculator.py`](../tools/bayesian/argument_probability_calculator.py).
+
+**Math in this file:** display formulas use `$$ … $$`, inline uses `$ … $`, so they render on **GitHub** and in editors that support math in Markdown (e.g. VS Code “Markdown Math”). If your viewer shows raw backslashes, open the file on GitHub or enable math in the preview.
 
 ---
 
@@ -8,7 +10,9 @@ This document consolidates **what happens mathematically** on CSO’s **epistemi
 
 1. **Structural** — nodes, edges, credibility labels, bias flags (`ontology/schema.json`).
 2. **Epistemic** — numeric priors, posteriors, edge evidence (Bayes factors, θ, weights), VFE and Total Predictability.
-3. **Transformation** — strengthening, contextual enrichment, debiasing, optional **cycle removal / DAG enforcement**, then metric recalculation.
+3. **Transformation** — structural edits (strengthening, contextual enrichment), **DAG-oriented cycle removal** when you need stable layer-2 scores, debiasing, then epistemic **(re)calculation**.
+
+**Ordering for inference:** Posteriors, VFE, and Total Predictability are **epistemic-layer** outputs. Their calculators assume **acyclic** support paths, so **DAG / cycle readiness must be achieved *before* those runs** whenever cycles are present—not only “after” other transformation steps. Strengthening and merges can **add** cycles; **re-check** before each epistemic pass you rely on.
 
 Layers 2–3 are **under active development**; treat formulas below as describing the **current reference implementation**, not a claim of a fully specified global Bayesian network.
 
@@ -25,9 +29,11 @@ Layers 2–3 are **under active development**; treat formulas below as describin
 
 Along one edge, probability is updated with a **Bayes factor** BF > 0:
 
-\[
+$$
 P_{\text{post}} = \frac{P_{\text{prior}} \cdot \text{BF}}{P_{\text{prior}} \cdot \text{BF} + (1 - P_{\text{prior}})}
-\]
+$$
+
+**Plain:** $P_{\text{post}} = (P_{\text{prior}} \cdot \mathrm{BF}) / (P_{\text{prior}} \cdot \mathrm{BF} + 1 - P_{\text{prior}})$.
 
 In code, when BF is missing, a **heuristic** BF may be synthesized from `relation`, `strength`, and `weight` (e.g. `supports` / `contradicts`). For serious analyses, **set or review BF explicitly** on edges.
 
@@ -37,11 +43,13 @@ For each argument, the calculator finds paths from **statement** nodes to that a
 
 ### 2.4 Combining multiple chains (independence-style)
 
-For several chain probabilities \(P_1,\ldots,P_n\) treated as **independent support**, the implementation combines them as:
+For several chain probabilities $P_1,\ldots,P_n$ treated as **independent support**, the implementation combines them as:
 
-\[
+$$
 P_{\text{combined}} = 1 - \prod_{i=1}^{n}(1 - P_i)
-\]
+$$
+
+**Plain (noisy-OR):** combined = $1 - (1-P_1)(1-P_2)\cdots(1-P_n)$.
 
 This is the “noisy-OR” style combination used in the current code (see comments in `_calculate_argument_posterior`). **Real evidence is often dependent**; document assumptions per study.
 
@@ -49,42 +57,44 @@ This is the “noisy-OR” style combination used in the current code (see comme
 
 The implementation defines metrics aligned with a VFE-style decomposition (see `calculate_variational_free_energy`):
 
-- **Marginal evidence** from chain probabilities: with evidence probabilities \(p_i\),
-  \[
+- **Marginal evidence** from chain probabilities: with evidence probabilities $p_i$,
+  $$
   m = 1 - \prod_i (1 - p_i)
-  \]
+  $$
   (clamped away from 0 for logs).
-- **Log-evidence / accuracy term:** \(\text{log\_evidence} = -\ln(m)\). The code also exposes this as **`accuracy_part`** (same as `log_evidence` in the current implementation).
-- **KL divergence** between posterior \(q\) and prior \(p\) (Bernoulli):
-  \[
-  D_{\mathrm{KL}}(q\|p) = q\ln\frac{q}{p} + (1-q)\ln\frac{1-q}{1-p}
-  \]
+- **Log-evidence / accuracy term:** $\text{log\_evidence} = -\ln(m)$. The code also exposes this as **`accuracy_part`** (same as `log_evidence` in the current implementation).
+- **KL divergence** between posterior $q$ and prior $p$ (Bernoulli):
+  $$
+  D_{\mathrm{KL}}(q\parallel p) = q\ln\frac{q}{p} + (1-q)\ln\frac{1-q}{1-p}
+  $$
 - **Total VFE (reported):**
-  \[
-  F_k^{\mathrm{VFE}} = \text{log\_evidence} + D_{\mathrm{KL}}(q\|p)
-  \]
+  $$
+  F_k^{\mathrm{VFE}} = \text{log\_evidence} + D_{\mathrm{KL}}(q\parallel p)
+  $$
 
 Lower VFE is treated as “better” in narrative terms; use comparisons **within** a fixed modeling setup, not as absolute truth.
 
 ### 2.6 Normalized VFE and per-argument predictability contribution
 
-Let \(|E_k|\) be the number of **statement → argument** edges incident on argument \(k\). The code uses:
+Let $|E_k|$ be the number of **statement → argument** edges incident on argument $k$. The code uses:
 
-\[
+$$
 \bar{F}_k = \frac{F_k^{\mathrm{VFE}}}{1 + |E_k|}
-\]
+$$
 
 **Per-argument contribution** to a predictability sum:
 
-\[
+$$
 \text{contribution}_k = e^{-\bar{F}_k}
-\]
+$$
 
 ### 2.7 Total Predictability (graph-level)
 
-\[
+$$
 P_{\mathrm{tot}} = \sum_k e^{-\bar{F}_k}
-\]
+$$
+
+**Plain:** $P_{\mathrm{tot}} = \sum_k \exp(-\bar{F}_k)$.
 
 The aggregated structure is also written into graph metadata when the pipeline runs (see `schema_bayesian.json` under `metadata.total_predictability`).
 
@@ -97,57 +107,53 @@ The aggregated structure is also written into graph metadata when the pipeline r
 
 ## 3. Transformation layer (layer 3)
 
-### 3.1 Strengthening
+Section 3 groups **operational tools** that edit the graph or prepare it for scoring. **Logically**, **DAG / cycle resolution is an epistemic precondition** (layer 2): run it **before** posterior / VFE / Total Predictability whenever directed cycles appear on traversed paths. It is documented here because implementations live next to other graph-edit pipelines. **Strengthening** often runs earlier in a project, but it is **not** a substitute for DAG prep—strengthening can create cycles, so you may need another DAG pass **before** the next epistemic run.
+
+### 3.1 DAG-oriented cycle removal (pipeline)
+
+**Why (epistemic):** Layer-2 calculators walk **directed** support paths. **Cycles** make propagation order-dependent and undermine interpretation of posteriors, VFE, and $P_{\mathrm{tot}}$. **Remove or collapse cycles before** invoking those tools on the subgraph you care about.
+
+**Cycle detection (in this repo):**
+
+- [`tools/bayesian/technical_rules.py`](../tools/bayesian/technical_rules.py) — `TechnicalRules.detect_cycles()` returns directed cycles from an edge list (DFS-style listing).
+- [`tools/bayesian/bayesian_validator.py`](../tools/bayesian/bayesian_validator.py) — `check_cycle_detection` can surface cycle warnings during validation.
+
+For **strongly connected components** (Tarjan, **O(V+E)**) or machine-readable SCC reports, use a graph library or a small external script; CSO does **not** currently ship a dedicated SCC CLI under `tools/`.
+
+**Breaking cycles / enforcing a DAG:**
+
+This repository does **not** include an automated DAG-resolution driver. **Manually** edit the CSO JSON (remove or retype edges, refactor nodes) until the support subgraph you score is acyclic, or plug in **your own** automation (e.g. scripted or LLM-assisted patches, then re-validate). Typical **policy-style** heuristics people use: (1) remove schema-invalid **argument → \*** edges, (2) drop weak or placeholder edges, (3) for “semantic” cycles, deactivate edges in a documented order (e.g. `influences` → context-like relations → `supports`), escalating to re-atomization only if needed.
+
+After the graph is DAG-ready on the paths you care about, run **`ArgumentProbabilityCalculator`** and related tools so **VFE** and **`total_predictability`** match that structure; save under a new filename if you want to keep both versions.
+
+**Epistemic tools (run only after DAG readiness on that graph):**
+
+- [`tools/bayesian/`](../tools/README.md) — `argument_probability_calculator.py`, `calculate_vfe.py`, full graph passes, etc.
+
+### 3.2 Strengthening
 
 - **Policy-driven argument strengthening** — [`tools/strengthening/argumentation_strengthener.py`](../tools/strengthening/argumentation_strengthener.py): LLM-guided edits / new nodes and edges under rotation of policies (no closed-form “math” — behavior is policy- and prompt-defined).
 - **Contextual strengthening** — [`tools/strengthening/contextual_strengthener.py`](../tools/strengthening/contextual_strengthener.py): merges evidence from external CSO graphs; may require `demo-site` modules when that stack is enabled.
 
-After structural changes, **re-run** validation and epistemic scoring if you rely on posteriors / VFE / \(P_{\mathrm{tot}}\).
+After structural changes, **re-run** schema validation; **re-check SCC / DAG** before the next **epistemic** pass if posteriors / VFE / $P_{\mathrm{tot}}$ must stay interpretable.
 
-### 3.2 Debiasing (closed-form on Bayes factors)
+### 3.3 Debiasing (closed-form on Bayes factors)
 
 From [debiasing_methodology.md](debiasing_methodology.md), implemented in [`tools/debiasing/cso_debiasing_tool.py`](../tools/debiasing/cso_debiasing_tool.py):
 
-**One bias** with weight \(w\):
+**One bias** with weight $w$:
 
-\[
+$$
 \text{BF}' = \text{BF} \cdot (1 - w)
-\]
+$$
 
-**Several biases** with weights \(w_i\):
+**Several biases** with weights $w_i$:
 
-\[
+$$
 \text{BF}' = \text{BF} \cdot \prod_i (1 - w_i)
-\]
+$$
 
-Then posteriors are recomputed using the corrected factors. Assumptions (multiplicative combination, approximate weights) must be documented per run.
-
-### 3.3 DAG-oriented cycle removal (pipeline)
-
-**Why:** Some scoring paths assume **acyclic** structure for stable chaining / interpretation. Strongly connected components (SCC) with more than one node indicate directed cycles.
-
-**Reporting (SCC analysis):**
-
-- [`ParliamentSpeakers/Validation/clipped/find_scc_cycles_report.py`](../ParliamentSpeakers/Validation/clipped/find_scc_cycles_report.py) — Tarjan **O(V+E)** SCC enumeration; text report for merged/strengthened graphs.
-
-**Resolution tool:**
-
-- [`ParliamentSpeakers/dag_resolution.py`](../ParliamentSpeakers/dag_resolution.py) — Loop: detect cycles → call **LLM** with a fixed JSON patch format (`delete` / `edit` / `new`) → apply patches → repeat until no SCC of size > 1 (or limits). Then **`ArgumentProbabilityCalculator`** recomputes **VFE** and **`total_predictability`** and writes a `*_DAG.json` style output.
-
-**Launch (examples):**
-
-```text
-cd ParliamentSpeakers
-python dag_resolution.py "data_bm_cso\...\file_strengthened.json"
-```
-
-Or use [`ParliamentSpeakers/run_dag_resolution.bat`](../ParliamentSpeakers/run_dag_resolution.bat).
-
-**Policy (summary):** The script’s system prompt prioritizes (1) removing illegal **argument → \*** edges, (2) dropping weak or auto-generated edges, (3) for “semantic” cycles, deactivating edges by priority (`influences` → context-like → `supports`), then escalation to re-atomization / composite SCC only if needed. Exact wording lives in `DAG_SYSTEM_INSTRUCTION` inside `dag_resolution.py`.
-
-**Metric tools after DAG:**
-
-- Same as layer 2: [`tools/bayesian/`](../tools/README.md) (`calculate_vfe.py`, full graph passes, etc.).
+Then posteriors are recomputed using the corrected factors. Assumptions (multiplicative combination, approximate weights) must be documented per run. (Same **acyclicity** expectations apply as for any other epistemic recalculation.)
 
 ---
 
@@ -157,10 +163,10 @@ Or use [`ParliamentSpeakers/run_dag_resolution.bat`](../ParliamentSpeakers/run_d
 |------|----------|
 | Validate base CSO | Structural JSON Schema + optional custom checks |
 | Validate Bayesian extension | `python tools/bayesian/bayesian_validator.py <graph.json>` |
-| Posteriors, VFE, \(P_{\mathrm{tot}}\) | `tools/bayesian/argument_probability_calculator.py`, `calculate_vfe.py` |
-| Debiasing | `tools/debiasing/cso_debiasing_tool.py` |
+| List directed cycles (simple) | `tools/bayesian/technical_rules.py` — `detect_cycles`; validator warnings in `bayesian_validator.py` |
+| SCC / automated DAG repair | Not shipped in `tools/` — external script, graph library, or manual JSON edits |
+| Posteriors, VFE, $P_{\mathrm{tot}}$ | `tools/bayesian/argument_probability_calculator.py`, `calculate_vfe.py` |
 | Strengthening | `tools/strengthening/*.py` |
-| SCC report | `ParliamentSpeakers/Validation/clipped/find_scc_cycles_report.py` |
-| LLM DAG resolution + metric refresh | `ParliamentSpeakers/dag_resolution.py` |
+| Debiasing | `tools/debiasing/cso_debiasing_tool.py` |
 
 See also: [bayesian_inference_workflow.md](bayesian_inference_workflow.md), [tools/README.md](../tools/README.md).

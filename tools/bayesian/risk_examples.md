@@ -87,7 +87,7 @@ print(f"Cycles: {cycles}")
 
 ## Risk 5: Invalid aggregation of probabilities
 
-**Wrong:** Add probabilities from independent hints: \(0.3 + 0.4 + 0.5 > 1\).
+**Wrong:** Add probabilities from independent hints: $0.3 + 0.4 + 0.5 > 1$.
 
 **Right:** Use log-odds or weighted geometric aggregation via `BayesianModelingRules`, or the chain / noisy-OR logic in `argument_probability_calculator.py`.
 

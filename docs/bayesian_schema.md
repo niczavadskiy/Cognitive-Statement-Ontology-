@@ -38,6 +38,10 @@ Bayesian runs may add or use:
 - `bayesian_model_info` (e.g. convergence settings) inside `metadata` when used by your pipeline
 - **`total_predictability`** summary (graph-level) after VFE / predictability aggregation — see schema properties under `metadata`
 
+## Graph shape for inference
+
+Calculators traverse **directed** support paths. **Cycles** can make posterior updates order-dependent or ill-defined; treat **DAG-oriented** preparation (e.g. SCC analysis and optional collapse) as part of graph readiness, not only schema validity. See [DAG preparation, epistemic layer, and transformation layer](epistemic_transformation_dag.md).
+
 ## Validation expectations
 
 1. Base structural graph is valid CSO (`ontology/schema.json`).

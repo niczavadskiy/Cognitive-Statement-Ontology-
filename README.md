@@ -6,9 +6,9 @@ Welcome to the **Cognitive Statement Ontology (CSO)** project.
 
 Cognitive Statement Ontology (CSO) is a framework for representing discourse as a structured graph of statements, arguments, evidence relations, cognitive biases, and epistemic metadata.
 
-The project is **not primarily a visualization tool**. Its main goal is to transform unstructured text into an explicit knowledge structure that can be inspected, evaluated, updated, strengthened, and compared over time.
+The project is not primarily a visualization tool. Its main goal is to transform unstructured text into an explicit knowledge structure that can be inspected, evaluated, updated, strengthened, and compared over time.
 
-**CSO is not primarily a visualization tool. It is a machine-readable structure of knowledge for iterative epistemic and structural transformation.**
+**1. CSO it is memory structure and  2. CSO it is a machine-readable structure of knowledge for save and iterative epistemic and structural transformation.**
 
 CSO separates three layers:
 
@@ -33,6 +33,8 @@ The **`bayesian-extension`** branch carries the **Bayesian extension**: an epist
 - contextual strengthening from external CSO graphs (where the pipeline is configured).
 
 The Bayesian extension treats a CSO graph not only as a static representation of discourse, but as an object that can be iteratively updated and epistemically refined.
+
+**DAG and cycles:** Propagation in the calculators follows directed paths; **cycles** in the support structure can make updates order-dependent or unstable. Treat an **acyclic** (DAG-shaped) layout as the normal precondition for inference, or apply the cycle-handling workflow (strongly connected components, collapse) in [DAG preparation, epistemic layer, and transformation layer](docs/epistemic_transformation_dag.md) before batch runs.
 
 See [Bayesian Layer Overview](docs/bayesian_overview.md), [Bayesian Schema Extensions](docs/bayesian_schema.md), and [Bayesian Inference Workflow](docs/bayesian_inference_workflow.md). The machine-readable extensions are defined in [`ontology/Bayesian_modeling/schema_bayesian.json`](ontology/Bayesian_modeling/schema_bayesian.json).
 
@@ -97,10 +99,11 @@ visualisations/
 
 ### Epistemic / Bayesian layer
 
-- [Epistemic math, transformation layer, and DAG](docs/epistemic_transformation_dag.md)
 - [Bayesian Layer Overview](docs/bayesian_overview.md)
+
 - [Bayesian Schema Extensions](docs/bayesian_schema.md)
 - [Bayesian Inference Workflow](docs/bayesian_inference_workflow.md)
+- [DAG preparation, epistemic layer, and transformation layer](docs/epistemic_transformation_dag.md) — graph shape before inference; epistemic math; SCC tooling and transformation scripts
 
 ### Cognitive bias and debiasing
 

@@ -45,5 +45,5 @@ This layer is intended for:
 
 Use a two-layer workflow:
 
-1. Build and validate the structural CSO graph (`ontology/schema.json`).
+1. Build and validate the structural CSO graph (`ontology/schema.json`). If you will run quantitative updates, review **cycles** and DAG readiness ([DAG preparation, epistemic layer, and transformation layer](epistemic_transformation_dag.md)).
 2. Enrich with Bayesian fields, validate with `tools/bayesian/bayesian_validator.py`, then run **Bayesian-style** updates / VFE and optional debiasing (`tools/bayesian/`, `tools/debiasing/`).

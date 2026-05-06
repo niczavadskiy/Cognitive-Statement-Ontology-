@@ -11,6 +11,8 @@ The Bayesian extension adds:
 - Influence weights between nodes
 - Handling of competing arguments and cognitive biases
 
+**DAG / cycles:** Calculators walk directed paths; **cycles** need explicit handling before stable inference. See [DAG preparation, epistemic layer, and transformation layer](../../docs/epistemic_transformation_dag.md).
+
 ## File layout
 
 ### Core modules

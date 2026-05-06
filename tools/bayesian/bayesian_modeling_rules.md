@@ -10,7 +10,7 @@
 
 ### 2. Bayesian updating
 - **Posterior** for arguments is computed from the graph (see `argument_probability_calculator.py`).
-- **Reference formula:** \(P(H|E) = P(H) \times \mathrm{BF} / (P(H)\times\mathrm{BF} + P(\neg H))\).
+- **Reference formula:** $P(H|E) = P(H) \times \mathrm{BF} / (P(H)\times\mathrm{BF} + P(\neg H))$.
 - **BF (Bayes factor):** strength of evidence (should be analyst-set in serious use).
 
 ### 3. Weighted influence

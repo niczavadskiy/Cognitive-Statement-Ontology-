@@ -86,7 +86,7 @@ Details: [`tools/debiasing/DEBIASING_README.md`](debiasing/DEBIASING_README.md).
 
 ## Documentation
 
-- [Epistemic math, transformation layer, and DAG](../docs/epistemic_transformation_dag.md)
+- [DAG preparation, epistemic layer, and transformation layer](../docs/epistemic_transformation_dag.md)
 - [Bayesian overview](../docs/bayesian_overview.md)
 - [Bayesian inference workflow](../docs/bayesian_inference_workflow.md)
 - [Project README](../README.md)

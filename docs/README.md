@@ -12,7 +12,7 @@ Project overview, architecture, and repository map: **[`../README.md`](../README
 
 ### Epistemic / Bayesian layer
 
-- [Epistemic math, transformation layer, and DAG](epistemic_transformation_dag.md) — single reference: VFE, Total Predictability, debiasing formulas, SCC/DAG tools
+- [DAG preparation, epistemic layer, and transformation layer](epistemic_transformation_dag.md) — preparing graphs for inference; epistemic math (VFE, posteriors, debiasing); SCC and transformation tooling
 - [Bayesian Layer Overview](bayesian_overview.md)
 - [Bayesian Schema Extensions](bayesian_schema.md)
 - [Bayesian Inference Workflow](bayesian_inference_workflow.md)
